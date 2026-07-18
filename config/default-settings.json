@@ -1,0 +1,17 @@
+{
+  "theme": "cyber-green",
+  "uiSounds": true,
+  "weatherEnabled": true,
+  "temperatureUnit": "fahrenheit",
+  "controllerNavigation": true,
+  "controllerVibration": true,
+  "nightMode": false,
+  "animations": true,
+  "screensaverMinutes": 10,
+  "libraryFolders": {
+    "music": "/home/pi/Media/Music",
+    "pictures": "/home/pi/Media/Pictures",
+    "games": "/home/pi/Media/Games",
+    "videos": "/home/pi/Media/Videos"
+  }
+}

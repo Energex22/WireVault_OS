@@ -1,0 +1,11 @@
+{
+  "host": "127.0.0.1",
+  "port": 8080,
+  "scan_interval_seconds": 10,
+  "media_folders": {
+    "music": "/home/oai/Media/Music",
+    "pictures": "/home/oai/Media/Pictures",
+    "games": "/home/oai/Media/Games",
+    "videos": "/home/oai/Media/Videos"
+  }
+}

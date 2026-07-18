@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>WireVault OS 4.0 Foundation</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/views.css">
+</head>
+<body>
+  <div class="hex-background" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <section class="brand-panel">
+      <div class="brand-mark">WV</div>
+      <div>
+        <div class="brand-name">WIREVAULT <span>OS</span></div>
+        <div class="brand-subtitle">4.0 FOUNDATION</div>
+      </div>
+    </section>
+
+    <section class="clock-panel">
+      <div>
+        <div id="topClock" class="top-clock">12:00 PM</div>
+        <div id="topDate" class="top-date">Loading date…</div>
+      </div>
+      <div class="top-weather">
+        <span>⛅</span>
+        <div><strong>72°F</strong><small>Prototype Weather</small></div>
+      </div>
+    </section>
+
+    <section class="status-panel">
+      <div class="status-item"><span>📶</span><small>Connected</small></div>
+      <div class="status-item"><span>ᛒ</span><small>Bluetooth</small></div>
+      <div class="status-item"><span>🎮</span><small>Controller</small></div>
+      <button id="controlCenterButton" class="icon-button focusable" type="button" aria-label="Open Control Center">☰</button>
+    </section>
+  </header>
+
+  <main class="app-shell">
+    <nav id="mainDock" class="main-dock" aria-label="WireVault sections"></nav>
+    <section id="appView" class="app-view" aria-live="polite"></section>
+  </main>
+
+  <aside id="controlCenter" class="control-center" aria-hidden="true">
+    <div class="control-header">
+      <div><small>WIREVAULT OS</small><h2>CONTROL CENTER</h2></div>
+      <button id="closeControlCenter" class="icon-button focusable" type="button">×</button>
+    </div>
+    <div class="control-grid">
+      <button class="quick-toggle active focusable" type="button"><span>📶</span><strong>Wi-Fi</strong><small>On</small></button>
+      <button class="quick-toggle active focusable" type="button"><span>ᛒ</span><strong>Bluetooth</strong><small>On</small></button>
+      <button class="quick-toggle focusable" data-toggle="night" type="button"><span>🌙</span><strong>Night</strong><small>Off</small></button>
+      <button class="quick-toggle active focusable" data-toggle="sounds" type="button"><span>🔊</span><strong>Sounds</strong><small>On</small></button>
+    </div>
+    <div class="control-card">
+      <span>Foundation Status</span>
+      <strong id="foundationStatus">Booting modules…</strong>
+      <small id="foundationDetail">Waiting for core services</small>
+    </div>
+    <div class="control-card">
+      <span>Current Route</span>
+      <strong id="currentRouteLabel">home</strong>
+      <small>Managed by Router</small>
+    </div>
+  </aside>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

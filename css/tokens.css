@@ -1,0 +1,14 @@
+:root{
+  --wv-green:#78ff16;
+  --wv-green-dim:#2f7d1d;
+  --wv-bg:#010301;
+  --wv-panel:#061008;
+  --wv-panel-2:#030805;
+  --wv-text:#f2f7ef;
+  --wv-muted:#8fa08c;
+  --wv-danger:#ff705c;
+  --wv-radius:16px;
+  --wv-topbar-height:126px;
+  --wv-shadow:0 0 22px rgba(120,255,22,.13);
+  --wv-transition:180ms ease;
+}

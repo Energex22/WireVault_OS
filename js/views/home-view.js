@@ -22,7 +22,9 @@ const formatUptime = seconds => {
 };
 
 export function createHomeView({ store, bus, coreApi, library, router }) {
-  const wrapper = el('div');
+  const wrapper = el('div',{
+    'data-wirevault-home-version':'0.9.6.2'
+  });
 
   async function refreshDashboard() {
     if (coreApi.online) {

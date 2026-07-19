@@ -1,13 +1,17 @@
-WireVault Alpha 0.9.6.1 Home System Card Hotfix
+WireVault Alpha 0.9.6.2 — Home Cache Bust Hotfix
 
-Required baseline: Alpha 0.9.6
+Required baseline: Alpha 0.9.6.1
 
-1. Copy the js and css folders into your WireVault_OS repository.
-2. Replace js/views/home-view.js and css/views.css.
-3. Restart WireVault Core.
-4. Press Ctrl+F5.
+1. Copy all patch files into your WireVault_OS repository root.
+2. Replace the existing files.
+3. Close every open WireVault browser tab.
+4. Close WireVault Core.
+5. Start WireVault Core again.
+6. Open a new browser tab to WireVault.
 
-This hotfix replaces the old Home System Health widget with the full Raspberry Pi card and removes the separate CPU Temperature, Memory, and Storage widgets.
+This update changes the JavaScript and CSS URLs to versioned URLs so Chromium cannot reuse the old Home module.
+
+The corrected Home page contains one large Raspberry Pi System card and does not contain separate CPU Temperature, Memory, or Storage cards.
 
 Commit message:
-Fix Home Raspberry Pi system card
+Force reload of corrected Home system card

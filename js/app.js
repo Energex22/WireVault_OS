@@ -8,7 +8,7 @@ import { LibraryService } from './services/library-service.js';
 import { CoreApiService } from './services/core-api-service.js';
 import { MusicPlayerService } from './services/music-player-service.js';
 import { createMiniPlayer } from './components/mini-player.js';
-import { createHomeView } from './views/home-view.js';
+import { createHomeView } from './views/home-view.js?v=0.9.6.2';
 import { wvIcon } from './components/wv-icon.js';
 import { createPlaceholderView } from './views/placeholder-view.js';
 import { createFilesView } from './views/files-view.js';

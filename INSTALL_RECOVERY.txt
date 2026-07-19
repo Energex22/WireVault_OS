@@ -1,0 +1,23 @@
+WireVault Alpha 1.2.2.2 — Full Layout Recovery and Dock Border Fix
+
+This replaces the broken partial stylesheet with the complete working styles.
+
+1. Close WireVault Core.
+2. Close every WireVault browser tab.
+3. Copy everything from this patch into the root of your WireVault_OS repository.
+4. Replace all four files when prompted.
+5. Start WireVault Core.
+6. Open WireVault in a new browser tab.
+
+Do not apply Alpha 1.2.2 or Alpha 1.2.2.1 afterward.
+
+This patch restores:
+- Full top header
+- Horizontal page dock
+- Main page content layout
+- Vault Search
+
+It also adds a narrowly scoped fix so the selected page border has room above it.
+
+Commit message:
+Restore full layout and fix dock selection border

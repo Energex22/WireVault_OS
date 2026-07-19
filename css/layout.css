@@ -181,3 +181,40 @@ body.mini-player-visible .app-shell{padding-bottom:118px}
 
 /* Alpha 0.9.5 */
 .active-route-title{display:none!important}.dock-center .main-dock{padding-top:4px}
+
+
+/* Alpha 1.2.2.2 — safe selected-page border fix
+   This is appended to the complete layout stylesheet. */
+.dock-shell,
+.dock-center,
+.main-dock,
+#mainDock {
+  overflow: visible !important;
+}
+
+.dock-center {
+  padding-top: 10px !important;
+}
+
+/* The selected dock button needs room above its green outline/glow. */
+#mainDock .dock-button {
+  position: relative;
+  z-index: 1;
+}
+
+#mainDock .dock-button.active,
+#mainDock .dock-button.controller-focused,
+#mainDock .dock-button:focus-visible {
+  z-index: 20;
+}
+
+/* Keep the full top edge of the selected border inside the dock panel. */
+#mainDock .dock-button.active {
+  margin-top: 3px;
+}
+
+/* Prevent the moving keyboard/controller halo from being clipped by the dock. */
+#mainDock .wv-focus-halo,
+.dock-shell .wv-focus-halo {
+  overflow: visible !important;
+}

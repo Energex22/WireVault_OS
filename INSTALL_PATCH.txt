@@ -1,8 +1,18 @@
-WireVault Alpha 1.2.3 — Compact System Status
+WireVault Alpha 1.3 — Home Layout Editor Prototype
 
-Required baseline: Alpha 1.2.2.2
+Required baseline: Alpha 1.2.3
 
-Close Core and browser tabs, copy all patch files into the repository root, replace files, restart Core, and open a new tab.
+Close Core and browser tabs, copy all patch files into the repository root,
+replace files, restart Core, and open WireVault in a new tab.
+
+Added:
+- Removed the Open Control Center text.
+- Edit Home button.
+- Move widgets left or right.
+- Toggle standard or wide size.
+- Hide and restore widgets.
+- Restore the default layout.
+- Saves the layout in local browser storage.
 
 Commit message:
-Redesign compact System Status card
+Add Home layout editor prototype

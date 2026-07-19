@@ -23,8 +23,42 @@ const formatUptime = seconds => {
 
 export function createHomeView({ store, bus, coreApi, library, router }) {
   const wrapper = el('div',{
-    'data-wirevault-home-version':'1.2.3'
+    'data-wirevault-home-version':'1.3.0'
   });
+
+const layoutKey = 'wirevault.home.layout.v1';
+const defaultOrder = [
+  'system','music','pictures','games','videos','scanner','weather'
+];
+let editMode = false;
+
+function loadLayout() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(layoutKey) || '{}');
+    return {
+      order:Array.isArray(saved.order) ? saved.order : [...defaultOrder],
+      hidden:Array.isArray(saved.hidden) ? saved.hidden : [],
+      wide:Array.isArray(saved.wide) ? saved.wide : ['system']
+    };
+  } catch {
+    return { order:[...defaultOrder], hidden:[], wide:['system'] };
+  }
+}
+
+function saveLayout(layout) {
+  localStorage.setItem(layoutKey, JSON.stringify(layout));
+}
+
+function normalizeLayout(layout) {
+  defaultOrder.forEach(id => {
+    if (!layout.order.includes(id)) layout.order.push(id);
+  });
+  layout.order = layout.order.filter(id => defaultOrder.includes(id));
+  layout.hidden = layout.hidden.filter(id => defaultOrder.includes(id));
+  layout.wide = layout.wide.filter(id => defaultOrder.includes(id));
+  return layout;
+}
+
 
   async function refreshDashboard() {
     if (coreApi.online) {
@@ -41,21 +75,40 @@ export function createHomeView({ store, bus, coreApi, library, router }) {
     render();
   }
 
-  function widget({ title, icon, value, detail, className = '', action = null }) {
-    const card = el(action ? 'button' : 'section',{
-      className:`dashboard-widget ${className} ${action ? 'focusable widget-button' : ''}`,
-      ...(action ? { type:'button', onclick:action } : {})
-    },[
-      el('div',{className:'widget-heading'},[
-        wvIcon(icon,'widget-icon'),
-        el('strong',{text:title})
-      ]),
-      el('div',{className:'widget-value',text:String(value)}),
-      el('small',{className:'widget-detail',text:detail})
-    ]);
-    return card;
-  }
-
+function widget({
+  id,
+  title,
+  icon,
+  value,
+  detail,
+  className = '',
+  action = null
+}) {
+  return el('section',{
+    className:`dashboard-widget ${className} ${action ? 'focusable widget-button' : ''}`,
+    'data-widget-id':id,
+    ...(action ? {
+      role:'button',
+      tabindex:'0',
+      onclick:() => {
+        if (!editMode) action();
+      },
+      onkeydown:event => {
+        if (!editMode && (event.key === 'Enter' || event.key === ' ')) {
+          event.preventDefault();
+          action();
+        }
+      }
+    } : {})
+  },[
+    el('div',{className:'widget-heading'},[
+      wvIcon(icon,'widget-icon'),
+      el('strong',{text:title})
+    ]),
+    el('div',{className:'widget-value',text:String(value)}),
+    el('small',{className:'widget-detail',text:detail})
+  ]);
+}
 
 function systemHealthCard({ system, memory, storage }) {
   const load = system.load_average || {};
@@ -80,10 +133,20 @@ function systemHealthCard({ system, memory, storage }) {
     return el('div',{className:'system-status-row'},children);
   };
 
-  return el('button',{
+  return el('section',{
     className:'dashboard-widget system-status-card focusable',
-    type:'button',
-    onclick:() => document.getElementById('controlCenterButton')?.click()
+    'data-widget-id':'system',
+    role:'button',
+    tabindex:'0',
+    onclick:() => {
+      if (!editMode) document.getElementById('controlCenterButton')?.click();
+    },
+    onkeydown:event => {
+      if (!editMode && (event.key === 'Enter' || event.key === ' ')) {
+        event.preventDefault();
+        document.getElementById('controlCenterButton')?.click();
+      }
+    }
   },[
     el('div',{className:'system-status-header'},[
       el('div',{className:'widget-heading'},[
@@ -134,7 +197,6 @@ function systemHealthCard({ system, memory, storage }) {
         system.python ? `Python ${system.python}` : ''
       )
     ]),
-    el('span',{className:'system-status-open',text:'Open Control Center'})
   ]);
 }
 
@@ -151,11 +213,21 @@ function systemHealthCard({ system, memory, storage }) {
         el('h1',{text:'Home'}),
         el('p',{text:'Live WireVault status and media information.'})
       ]),
-      el('button',{
-        className:'secondary-button focusable',
-        type:'button',
-        onclick:refreshDashboard
-      },'Refresh Widgets')
+      el('div',{className:'home-heading-actions'},[
+        el('button',{
+          className:'secondary-button focusable',
+          type:'button',
+          onclick:refreshDashboard
+        },'Refresh'),
+        el('button',{
+          className:`secondary-button focusable ${editMode ? 'active' : ''}`,
+          type:'button',
+          onclick:() => {
+            editMode = !editMode;
+            render();
+          }
+        },editMode ? 'Done Editing' : 'Edit Home')
+      ])
     ]);
 
     const statusStrip = el('div',{className:'dashboard-status-strip'},[
@@ -172,9 +244,12 @@ function systemHealthCard({ system, memory, storage }) {
       })
     ]);
 
-    const widgets = el('div',{className:'dashboard-widget-grid'},[
+
+    const widgetNodes = [
+
       systemHealthCard({ system, memory, storage }),
       widget({
+        id:'music',
         title:'Music',
         icon:'music',
         value:counts.music || 0,
@@ -182,6 +257,7 @@ function systemHealthCard({ system, memory, storage }) {
         action:() => router.open('music')
       }),
       widget({
+        id:'pictures',
         title:'Pictures',
         icon:'pictures',
         value:counts.pictures || 0,
@@ -189,6 +265,7 @@ function systemHealthCard({ system, memory, storage }) {
         action:() => router.open('pictures')
       }),
       widget({
+        id:'games',
         title:'Games',
         icon:'games',
         value:counts.games || 0,
@@ -196,6 +273,7 @@ function systemHealthCard({ system, memory, storage }) {
         action:() => router.open('games')
       }),
       widget({
+        id:'videos',
         title:'Videos',
         icon:'streaming',
         value:counts.videos || 0,
@@ -203,6 +281,7 @@ function systemHealthCard({ system, memory, storage }) {
         action:() => router.open('files')
       }),
       widget({
+        id:'scanner',
         title:'Media Scanner',
         icon:'scanner',
         value:scan.running ? 'Scanning' : 'Idle',
@@ -212,12 +291,139 @@ function systemHealthCard({ system, memory, storage }) {
         className:scan.running ? 'widget-scanning' : ''
       }),
       widget({
+        id:'weather',
         title:'Weather',
         icon:'weather',
         value:'72°F',
         detail:'Weather service will replace this placeholder'
       })
-    ]);
+    
+    ];
+
+    const layout = normalizeLayout(loadLayout());
+    const nodeById = new Map(
+      widgetNodes.map(node => [node.dataset.widgetId, node])
+    );
+
+    function moveWidget(id, direction) {
+      const index = layout.order.indexOf(id);
+      const target = index + direction;
+      if (index < 0 || target < 0 || target >= layout.order.length) return;
+      [layout.order[index], layout.order[target]] =
+        [layout.order[target], layout.order[index]];
+      saveLayout(layout);
+      render();
+    }
+
+    function toggleWide(id) {
+      layout.wide = layout.wide.includes(id)
+        ? layout.wide.filter(item => item !== id)
+        : [...layout.wide, id];
+      saveLayout(layout);
+      render();
+    }
+
+    function hideWidget(id) {
+      if (!layout.hidden.includes(id)) layout.hidden.push(id);
+      saveLayout(layout);
+      render();
+    }
+
+    function restoreWidget(id) {
+      layout.hidden = layout.hidden.filter(item => item !== id);
+      saveLayout(layout);
+      render();
+    }
+
+    function decorateWidget(node, id) {
+      node.classList.toggle('widget-layout-wide', layout.wide.includes(id));
+      node.classList.toggle('widget-editing', editMode);
+
+      if (!editMode) return node;
+
+      node.append(el('div',{className:'widget-edit-controls'},[
+        el('button',{
+          type:'button',
+          className:'focusable',
+          title:'Move left',
+          onclick:event => {
+            event.stopPropagation();
+            moveWidget(id,-1);
+          }
+        },'←'),
+        el('button',{
+          type:'button',
+          className:'focusable',
+          title:'Move right',
+          onclick:event => {
+            event.stopPropagation();
+            moveWidget(id,1);
+          }
+        },'→'),
+        el('button',{
+          type:'button',
+          className:'focusable',
+          title:'Resize widget',
+          onclick:event => {
+            event.stopPropagation();
+            toggleWide(id);
+          }
+        },layout.wide.includes(id) ? '1×' : '2×'),
+        el('button',{
+          type:'button',
+          className:'focusable widget-hide-control',
+          title:'Hide widget',
+          onclick:event => {
+            event.stopPropagation();
+            hideWidget(id);
+          }
+        },'×')
+      ]));
+      return node;
+    }
+
+    const widgets = el('div',{
+      className:`dashboard-widget-grid ${editMode ? 'home-edit-mode' : ''}`
+    });
+
+    layout.order.forEach(id => {
+      if (layout.hidden.includes(id)) return;
+      const node = nodeById.get(id);
+      if (node) widgets.append(decorateWidget(node,id));
+    });
+
+    const hiddenWidgets = editMode && layout.hidden.length
+      ? el('section',{className:'home-hidden-widgets'},[
+          el('strong',{text:'Hidden Widgets'}),
+          el('div',{className:'home-hidden-widget-list'},
+            layout.hidden.map(id =>
+              el('button',{
+                type:'button',
+                className:'secondary-button focusable',
+                onclick:() => restoreWidget(id)
+              },`+ ${id.charAt(0).toUpperCase()+id.slice(1)}`)
+            )
+          )
+        ])
+      : null;
+
+    const editToolbar = editMode
+      ? el('section',{className:'home-edit-toolbar'},[
+          el('div',{},[
+            el('strong',{text:'Edit Home'}),
+            el('small',{text:'Move, resize, or hide dashboard widgets.'})
+          ]),
+          el('button',{
+            type:'button',
+            className:'secondary-button focusable',
+            onclick:() => {
+              localStorage.removeItem(layoutKey);
+              render();
+            }
+          },'Restore Default')
+        ])
+      : null;
+
 
     const activityPanel = el('section',{className:'panel dashboard-activity-panel'},[
       el('div',{className:'widget-panel-heading'},[
@@ -256,7 +462,14 @@ function systemHealthCard({ system, memory, storage }) {
     }
 
     activityPanel.append(activityList);
-    wrapper.replaceChildren(heading,statusStrip,widgets,activityPanel);
+    wrapper.replaceChildren(
+      heading,
+      editToolbar,
+      hiddenWidgets,
+      statusStrip,
+      widgets,
+      activityPanel
+    );
   }
 
   bus.on('library:refreshed',render);

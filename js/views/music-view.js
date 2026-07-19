@@ -1,6 +1,6 @@
 import { el } from '../components/el.js';
 
-export function createMusicView({ library, router, coreApi }) {
+export function createMusicView({ library, router, coreApi, musicPlayer }) {
   const wrapper = el('div');
 
   function render() {
@@ -34,10 +34,10 @@ export function createMusicView({ library, router, coreApi }) {
 
     const list = el('div',{className:'auto-library-grid'});
     tracks.forEach(track => {
-      list.append(el('button',{className:'auto-library-card focusable',type:'button'},[
-        el('span',{text:'🎵'}),
+      list.append(el('button',{className:'auto-library-card focusable music-track-card',type:'button',onclick:()=>musicPlayer.playTrack(track,tracks)},[
+        el('span',{className:'music-track-play',text:'▶'}),
         el('strong',{text:track.name}),
-        el('small',{text:`${track.extension.toUpperCase()} · Indexed music`})
+        el('small',{text:`${track.extension.toUpperCase()} · Play track`})
       ]));
     });
 

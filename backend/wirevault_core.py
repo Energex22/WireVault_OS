@@ -4,7 +4,7 @@ from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Event, Lock, Thread
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, urlparse, unquote
 from queue import Empty
 import argparse
 import json
@@ -13,6 +13,7 @@ import mimetypes
 import os
 import signal
 import time
+import shutil
 
 from config import load_settings, save_settings, project_paths
 from database import Database
@@ -186,6 +187,37 @@ class WireVaultHandler(SimpleHTTPRequestHandler):
                 pass
             finally:
                 self.core.events.unsubscribe(queue)
+            return
+
+
+        if parsed.path == "/api/media/file":
+            query = parse_qs(parsed.query)
+            requested = unquote(query.get("path", [""])[0])
+            if not requested:
+                self.send_json({"error": "path is required"}, 400)
+                return
+            try:
+                resolved = Path(requested).expanduser().resolve(strict=True)
+            except OSError:
+                self.send_json({"error": "file not found"}, 404)
+                return
+            allowed = [Path(value).expanduser().resolve() for value in self.core.settings.get("media_folders", {}).values()]
+            if not any(root == resolved or root in resolved.parents for root in allowed):
+                self.send_json({"error": "file is outside configured media folders"}, 403)
+                return
+            if not resolved.is_file():
+                self.send_json({"error": "file not found"}, 404)
+                return
+            mime_type, _ = mimetypes.guess_type(str(resolved))
+            size = resolved.stat().st_size
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", mime_type or "application/octet-stream")
+            self.send_header("Content-Length", str(size))
+            self.send_header("Accept-Ranges", "bytes")
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            with resolved.open("rb") as media_file:
+                shutil.copyfileobj(media_file, self.wfile)
             return
 
         super().do_GET()

@@ -300,3 +300,9 @@
   font-size:10px;
   white-space:nowrap;
 }
+
+.mini-player-button{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--wv-green-dim);border-radius:10px;background:#071008;color:#fff;font-weight:1000}
+.mini-player-button:hover,.mini-player-button.active{border-color:var(--wv-green);color:var(--wv-green);box-shadow:0 0 11px rgba(120,255,22,.18)}
+.mini-player-play{width:44px;height:44px;border-color:var(--wv-green);background:var(--wv-green);color:#041005}.mini-player-close{color:#ff9a8c}
+.music-track-play{width:48px;height:48px;display:grid;place-items:center;border:1px solid var(--wv-green);border-radius:50%;background:#071008;color:var(--wv-green);font-size:20px!important;transition:.16s}
+.music-track-card:hover .music-track-play{transform:scale(1.08);background:var(--wv-green);color:#041005}

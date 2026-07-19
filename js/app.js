@@ -6,6 +6,8 @@ import { SettingsRegistry } from './services/settings-registry.js';
 import { ClockService } from './services/clock-service.js';
 import { LibraryService } from './services/library-service.js';
 import { CoreApiService } from './services/core-api-service.js';
+import { MusicPlayerService } from './services/music-player-service.js';
+import { createMiniPlayer } from './components/mini-player.js';
 import { createHomeView } from './views/home-view.js';
 import { wvIcon } from './components/wv-icon.js';
 import { createPlaceholderView } from './views/placeholder-view.js';
@@ -47,7 +49,7 @@ const routes = {
   home:{render:()=>createHomeView({store,bus,coreApi,library,router})},
   streaming:{render:()=>createPlaceholderView({icon:'streaming',title:'Streaming',description:'This will be the first legacy section ported into the modular router.'})},
   games:{render:()=>createGamesView({library,router,coreApi})},
-  music:{render:()=>createMusicView({library,router,coreApi})},
+  music:{render:()=>createMusicView({library,router,coreApi,musicPlayer})},
   pictures:{render:()=>createPicturesView({library,router,coreApi})},
   files:{render:()=>createFilesView({library,coreApi,toast})},
   browser:{render:()=>createPlaceholderView({icon:'browser',title:'Browser',description:'Bookmarks and launcher actions will be isolated from the dashboard.'})},
@@ -88,6 +90,7 @@ const registry = new SettingsRegistry();
 const clock = new ClockService(bus);
 const coreApi = new CoreApiService({bus});
 const library = new LibraryService({store,bus,coreApi});
+const musicPlayer = new MusicPlayerService({bus,store});
 
 const dockRoutes = [
   ['home','home','Home'],
@@ -98,6 +101,8 @@ const dockRoutes = [
   ['files','files','Files'],
   ['settings','settings','Settings']
 ];
+
+document.body.append(createMiniPlayer({player:musicPlayer,store,bus}));
 
 const dock = document.getElementById('mainDock');
 dockRoutes.forEach(([route,iconName,label])=>{
@@ -159,6 +164,7 @@ bus.on('settings:saved',()=>toast('Settings saved'));
 bus.on('settings:reset',()=>toast('Settings reset'));
 bus.on('settings:restored',()=>toast('Backup restored'));
 bus.on('settings:factory-reset',()=>toast('Factory reset complete'));
+bus.on('music:error',event=>toast(event.message||'Music playback error'));
 bus.on('library:folders-changed',()=>{
   settings.save();
   toast('Media folder locations updated');
@@ -234,7 +240,7 @@ bus.on('core:library.scan.complete',async event=>{
   toast('Media scan complete');
 });
 
-window.WireVault = {bus,store,router,settings,registry,clock,library,coreApi,toast};
+window.WireVault = {bus,store,router,settings,registry,clock,library,coreApi,musicPlayer,toast};
 /* Alpha 0.4 animated console dock */
 (function wireVaultAnimatedDock() {
   const dock = document.getElementById('mainDock');

@@ -1,24 +1,13 @@
-WireVault OS Alpha 0.6 — Notification Center Patch
+WireVault Alpha 0.7 Persistent Mini Player
 
-Required baseline:
-WireVault OS 4.0 — Alpha 0.5 Dynamic Backgrounds
+Required baseline: Alpha 0.6 Notification Center
 
-Apply the patch:
-1. Open your local WireVault_OS repository folder.
-2. Copy everything inside this patch folder into the repository root.
-3. Choose Replace when Windows asks about existing files.
-4. Run start_core_windows.bat.
-5. Open http://127.0.0.1:8080.
-6. Test the notification button in the upper-right status area.
-7. Commit and push the changes.
+1. Copy everything in this patch into the root of your local WireVault_OS repository.
+2. Replace the existing files.
+3. Run start_core_windows.bat.
+4. Open Music and select an indexed track.
+5. Change pages and confirm the music continues.
+6. Commit and push.
 
-Changed project files:
-- index.html
-- js/app.js
-- js/services/core-api-service.js
-- css/layout.css
-- css/components.css
-- README.md
-
-Suggested commit message:
-Add live notification center
+Commit message:
+Add persistent mini music player

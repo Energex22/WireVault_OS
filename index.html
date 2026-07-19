@@ -12,6 +12,34 @@
   <link rel="stylesheet" href="css/animations.css">
 </head>
 <body>
+<div id="wireVaultBoot" class="wv-boot-screen" aria-label="WireVault starting">
+  <div class="wv-boot-grid" aria-hidden="true"></div>
+  <div class="wv-boot-content">
+    <div class="wv-boot-emblem" aria-hidden="true">
+      <span class="wv-boot-ring ring-one"></span>
+      <span class="wv-boot-ring ring-two"></span>
+      <span class="wv-boot-core">W</span>
+    </div>
+
+    <div class="wv-boot-wordmark">
+      <span>WIRE</span><strong>VAULT</strong>
+    </div>
+
+    <div class="wv-boot-subtitle">ENTERTAINMENT SYSTEM</div>
+
+    <div class="wv-boot-progress" aria-hidden="true">
+      <span id="wireVaultBootProgress"></span>
+    </div>
+
+    <div id="wireVaultBootStatus" class="wv-boot-status">
+      Initializing Core
+    </div>
+
+    <button id="wireVaultBootSkip" class="wv-boot-skip" type="button">
+      Press Enter or click to skip
+    </button>
+  </div>
+</div>
   <div class="ambient-background" aria-hidden="true">
   <div class="ambient-layer ambient-layer-base"></div>
   <div class="ambient-layer ambient-layer-route"></div>

@@ -1,17 +1,15 @@
-WireVault Alpha 0.9 Animation Foundation
+WireVault Alpha 0.9.2 Boot Animation
 
-Required baseline: Alpha 0.8.5
+Required baseline: Alpha 0.9.1 Animation Stability Hotfix
 
-1. Copy all files from this patch into the root of your WireVault_OS repository.
-2. Replace index.html when prompted.
-3. Start WireVault Core.
-4. Hard-refresh the browser with Ctrl+F5.
-5. Switch between sections and test keyboard/controller focus.
+1. Copy all patch files into your WireVault_OS repository root.
+2. Replace index.html, css/animations.css, and js/animation-runtime.js.
+3. Restart WireVault Core.
+4. Press Ctrl+F5.
 
-Changed files:
-- index.html
-- css/animations.css
-- js/animation-runtime.js
+The full boot animation shows once per browser session.
+Refreshes in the same session use a short startup handoff.
+Press Enter, Escape, Space, or click the skip message to skip.
 
 Commit message:
-Add console animation foundation
+Add WireVault boot animation

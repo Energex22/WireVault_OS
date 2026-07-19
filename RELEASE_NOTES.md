@@ -1,25 +1,18 @@
-# WireVault Alpha 0.9 — Animation Foundation
+# WireVault Alpha 0.9.2 — Boot Animation
 
 ## Added
 
-- Smooth route fade, blur, and slide transitions
-- Staggered page-content entry
-- Sliding controller/keyboard focus halo
-- Card lift and glow
-- Button press feedback
-- Animated dock selection
-- Control Center and Notification Center opening polish
-- Toast pop animation
-- Media scanner spinner
-- Reusable loading shimmer
-- Full reduced-motion support
-
-## Changed files
-
-- `index.html`
-- `css/animations.css`
-- `js/animation-runtime.js`
+- Full-screen WireVault startup sequence
+- Animated emblem and neon rings
+- Moving technical grid
+- Boot status messages
+- Progress bar
+- Smooth fade into the Home dashboard
+- Enter, Escape, Space, and click-to-skip
+- Full animation once per browser session
+- Short handoff on later refreshes
+- `WireVaultBoot.replay()` developer command
 
 ## Commit
 
-`Add console animation foundation`
+`Add WireVault boot animation`

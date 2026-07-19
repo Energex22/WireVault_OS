@@ -164,3 +164,89 @@ window.WireVaultAnimations = {
     element?.classList.toggle('wv-loading', Boolean(loading));
   }
 };
+
+/* Alpha 0.9.2 boot sequence */
+(function wireVaultBootSequence() {
+  const screen = document.getElementById('wireVaultBoot');
+  const progress = document.getElementById('wireVaultBootProgress');
+  const status = document.getElementById('wireVaultBootStatus');
+  const skip = document.getElementById('wireVaultBootSkip');
+
+  if (!screen || !progress || !status) return;
+
+  const alreadyShown = sessionStorage.getItem('wirevault.boot.shown') === '1';
+  const steps = [
+    [16, 'Initializing Core'],
+    [36, 'Loading Interface'],
+    [58, 'Connecting Media Library'],
+    [78, 'Preparing Controllers'],
+    [94, 'Starting WireVault'],
+    [100, 'Ready']
+  ];
+
+  let finished = false;
+  let timers = [];
+
+  function finishBoot() {
+    if (finished) return;
+    finished = true;
+
+    timers.forEach(clearTimeout);
+    progress.style.width = '100%';
+    status.textContent = 'Ready';
+    sessionStorage.setItem('wirevault.boot.shown', '1');
+
+    setTimeout(() => {
+      screen.classList.add('complete');
+      document.body.classList.remove('wv-booting');
+
+      setTimeout(() => {
+        screen.remove();
+      }, 520);
+    }, alreadyShown ? 80 : 260);
+  }
+
+  function startBoot() {
+    document.body.classList.add('wv-booting');
+
+    if (alreadyShown) {
+      progress.style.width = '100%';
+      status.textContent = 'WireVault Ready';
+      timers.push(setTimeout(finishBoot, 280));
+      return;
+    }
+
+    steps.forEach(([percent, message], index) => {
+      timers.push(setTimeout(() => {
+        progress.style.width = `${percent}%`;
+        status.textContent = message;
+
+        if (percent === 100) {
+          timers.push(setTimeout(finishBoot, 300));
+        }
+      }, 330 + index * 330));
+    });
+  }
+
+  skip?.addEventListener('click', finishBoot);
+
+  window.addEventListener('keydown', event => {
+    if (
+      !finished &&
+      ['Enter', 'Escape', ' ', 'Gamepad0'].includes(event.key)
+    ) {
+      event.preventDefault();
+      finishBoot();
+    }
+  });
+
+  startBoot();
+
+  window.WireVaultBoot = {
+    finish: finishBoot,
+    replay() {
+      sessionStorage.removeItem('wirevault.boot.shown');
+      window.location.reload();
+    }
+  };
+})();

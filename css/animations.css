@@ -283,3 +283,245 @@ body.wv-route-entering .app-view > * > * {
     left 0ms linear 90ms,
     top 0ms linear 90ms;
 }
+
+
+/* Alpha 0.9.2 WireVault boot animation */
+.wv-boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(120,255,22,.11), transparent 28%),
+    linear-gradient(180deg, #020603, #000);
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 480ms ease,
+    visibility 0ms linear;
+}
+
+.wv-boot-screen.complete {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 480ms ease,
+    visibility 0ms linear 480ms;
+}
+
+.wv-boot-grid {
+  position: absolute;
+  inset: -20%;
+  opacity: .25;
+  background:
+    linear-gradient(rgba(120,255,22,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120,255,22,.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  transform: perspective(700px) rotateX(63deg) translateY(30%);
+  transform-origin: center;
+  animation: wvBootGrid 5s linear infinite;
+}
+
+.wv-boot-content {
+  position: relative;
+  z-index: 2;
+  width: min(560px, 86vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.wv-boot-emblem {
+  position: relative;
+  width: 148px;
+  height: 148px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 24px;
+  animation: wvBootEmblemIn 800ms var(--wv-ease-spring) both;
+}
+
+.wv-boot-ring {
+  position: absolute;
+  inset: 0;
+  border: 3px solid rgba(120,255,22,.82);
+  border-radius: 32px;
+  box-shadow:
+    0 0 18px rgba(120,255,22,.28),
+    inset 0 0 18px rgba(120,255,22,.08);
+}
+
+.wv-boot-ring.ring-one {
+  animation: wvBootRingOne 4.2s linear infinite;
+}
+
+.wv-boot-ring.ring-two {
+  inset: 18px;
+  border-width: 2px;
+  border-color: rgba(183,255,133,.55);
+  border-radius: 24px;
+  animation: wvBootRingTwo 3.2s linear infinite reverse;
+}
+
+.wv-boot-core {
+  position: relative;
+  z-index: 2;
+  color: var(--wv-green);
+  font-size: 66px;
+  font-weight: 1000;
+  line-height: 1;
+  text-shadow:
+    0 0 8px rgba(120,255,22,.7),
+    0 0 28px rgba(120,255,22,.38);
+  animation: wvBootCorePulse 1.8s ease-in-out infinite;
+}
+
+.wv-boot-wordmark {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  color: #fff;
+  font-size: clamp(34px, 7vw, 58px);
+  font-weight: 300;
+  letter-spacing: 9px;
+  opacity: 0;
+  animation: wvBootTextIn 700ms 280ms var(--wv-ease-standard) forwards;
+}
+
+.wv-boot-wordmark strong {
+  color: var(--wv-green);
+  font-weight: 1000;
+  text-shadow: 0 0 16px rgba(120,255,22,.4);
+}
+
+.wv-boot-subtitle {
+  margin-top: 8px;
+  color: rgba(255,255,255,.48);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 5px;
+  opacity: 0;
+  animation: wvBootTextIn 600ms 520ms ease forwards;
+}
+
+.wv-boot-progress {
+  width: min(400px, 76vw);
+  height: 4px;
+  margin-top: 34px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(120,255,22,.12);
+  box-shadow: inset 0 0 8px rgba(0,0,0,.7);
+}
+
+.wv-boot-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #3ea600, var(--wv-green), #d6ffba);
+  box-shadow: 0 0 12px rgba(120,255,22,.65);
+  transition: width 420ms var(--wv-ease-standard);
+}
+
+.wv-boot-status {
+  min-height: 18px;
+  margin-top: 13px;
+  color: rgba(255,255,255,.68);
+  font-family: monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.wv-boot-skip {
+  margin-top: 32px;
+  border: 0;
+  background: transparent;
+  color: rgba(255,255,255,.28);
+  font-size: 10px;
+  letter-spacing: 1px;
+  opacity: 0;
+  animation: wvBootSkipIn 500ms 1.3s ease forwards;
+}
+
+.wv-boot-skip:hover {
+  color: var(--wv-green);
+}
+
+body.wv-booting {
+  overflow: hidden;
+}
+
+body.wv-booting .topbar,
+body.wv-booting .app-shell,
+body.wv-booting .mini-player {
+  visibility: hidden;
+}
+
+@keyframes wvBootGrid {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 0 42px, 42px 0; }
+}
+
+@keyframes wvBootEmblemIn {
+  from {
+    opacity: 0;
+    transform: scale(.58) rotate(-14deg);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes wvBootRingOne {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes wvBootRingTwo {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes wvBootCorePulse {
+  0%,100% { transform: scale(1); opacity: .86; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes wvBootTextIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes wvBootSkipIn {
+  to { opacity: 1; }
+}
+
+@media (max-width: 560px) {
+  .wv-boot-emblem {
+    width: 118px;
+    height: 118px;
+  }
+
+  .wv-boot-core {
+    font-size: 52px;
+  }
+
+  .wv-boot-wordmark {
+    gap: 1px;
+    letter-spacing: 5px;
+  }
+}

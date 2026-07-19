@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/views.css?v=0.9.6.2">
   <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/vault-search.css?v=1.2.0">
 </head>
 <body>
 <div id="wireVaultBoot" class="wv-boot-screen" aria-label="WireVault starting">
@@ -167,9 +168,52 @@
     </div>
   </aside>
 
+<div id="vaultSearchBackdrop" class="vault-search-backdrop" aria-hidden="true"></div>
+
+<section id="vaultSearch" class="vault-search" aria-hidden="true" aria-label="Vault Search">
+  <div class="vault-search-handle" aria-hidden="true"></div>
+
+  <header class="vault-search-header">
+    <div>
+      <small>WIREVAULT</small>
+      <h2>VAULT SEARCH</h2>
+    </div>
+    <div class="vault-search-shortcut">CTRL + SPACE</div>
+  </header>
+
+  <label class="vault-search-input-shell">
+    <span aria-hidden="true">⌕</span>
+    <input
+      id="vaultSearchInput"
+      type="search"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="Search pages, settings, music, games, pictures, and videos"
+      aria-label="Search WireVault"
+    >
+    <kbd>ESC</kbd>
+  </label>
+
+  <div class="vault-search-body">
+    <aside class="vault-search-sidebar">
+      <strong id="vaultSearchSectionTitle">Quick Access</strong>
+      <small id="vaultSearchSummary">Pages and recent destinations</small>
+
+      <div class="vault-search-legend">
+        <span><kbd>↑ ↓</kbd> Move</span>
+        <span><kbd>Enter</kbd> Open</span>
+        <span><kbd>Esc</kbd> Close</span>
+      </div>
+    </aside>
+
+    <div id="vaultSearchResults" class="vault-search-results" role="listbox"></div>
+  </div>
+</section>
+
   <div id="toast" class="toast" role="status"></div>
 
   <script type="module" src="js/app.js?v=0.9.6.2"></script>
   <script type="module" src="js/animation-runtime.js"></script>
+  <script type="module" src="js/vault-search.js?v=1.2.0"></script>
 </body>
 </html>

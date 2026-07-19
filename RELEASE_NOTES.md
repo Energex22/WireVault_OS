@@ -1,33 +1,35 @@
-# WireVault Alpha 0.9.6
+# WireVault Alpha 1.2 — Vault Search Prototype
 
-## Home
+## Design
 
-The large System Health widget is now a real all-in-one Raspberry Pi card:
+- Slides upward from the bottom.
+- Leaves the top WireVault menu visible.
+- Slightly darkens and blurs only the content below the top bar.
+- Does not replace any existing navigation.
 
-- Core state
-- Hostname
-- Uptime
-- CPU temperature
-- One-minute CPU load
-- Memory usage
-- Storage usage and free space
-- Architecture
-- Python version
+## Searches
 
-The separate Temperature, Memory, and Storage cards were removed to avoid
-duplicating the same information.
+- Main WireVault pages
+- Common settings destinations
+- Indexed music
+- Indexed games
+- Indexed pictures
+- Indexed videos
+- Manual media-scan action
 
-## Control Center
+## Empty state
 
-Added a compact Raspberry Pi system panel with the same live information.
+When no text is entered, Vault Search shows recent and commonly used
+destinations.
 
-Clicking the Home system card opens Control Center.
+## Controls
 
-## Future layout editing
-
-The system card remains a two-column widget and is structured so a later
-per-user Home editor can move, resize, hide, or restore it.
+- `Ctrl + Space`: open or close
+- Arrow keys: move
+- Enter: select
+- Escape: close
+- Hold controller Start: prototype controller opening gesture
 
 ## Commit
 
-`Add Raspberry Pi system health panels`
+`Add bottom drawer Vault Search prototype`

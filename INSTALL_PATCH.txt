@@ -1,15 +1,24 @@
-WireVault Alpha 0.9.6 — Raspberry Pi System Health
+WireVault Alpha 1.2 — Vault Search Prototype
 
-Required baseline: Alpha 0.9.5
+Required baseline: Alpha 0.9.6.2
 
 1. Copy all patch contents into your WireVault_OS repository root.
-2. Replace the existing files.
+2. Replace index.html.
 3. Restart WireVault Core.
-4. Press Ctrl+F5.
+4. Close old WireVault tabs and open a new one.
+5. Press Ctrl + Space.
 
-The large Home card now contains the Pi system information that justifies its two-column size. The individual CPU Temperature, Memory, and Storage cards were removed to avoid duplicate information.
+Vault Search rises from the bottom and leaves the top navigation visible.
+It does not replace or modify the normal menus.
 
-Click the System card to open Control Center, where the same information is shown in a compact persistent system panel.
+Keyboard:
+- Ctrl + Space: open or close
+- Up/Down: choose result
+- Enter: open result
+- Escape: close
+
+Controller prototype:
+- Hold Start for about 0.65 seconds
 
 Commit message:
-Add Raspberry Pi system health panels
+Add bottom drawer Vault Search prototype

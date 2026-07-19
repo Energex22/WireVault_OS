@@ -95,8 +95,7 @@ export function createHomeView({ store, bus, coreApi, library, router }) {
         value:coreApi.online ? 'Healthy' : 'Preview',
         detail:coreApi.online
           ? `${system.hostname || 'WireVault'} · ${formatUptime(system.uptime_seconds)} uptime`
-          : 'Backend is not currently connected',
-        className:'widget-wide'
+          : 'Backend is not currently connected'
       }),
       widget({
         title:'CPU Temperature',

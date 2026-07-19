@@ -1,20 +1,14 @@
-WireVault Alpha 0.9.4 — Quiet Media and No-Flash Navigation
+WireVault Alpha 0.9.5 — Dock and Widget Cleanup
 
-Required baseline: Alpha 0.9.3
+Required baseline: Alpha 0.9.4
 
-1. Close WireVault Core.
-2. Copy all folders from this patch into your WireVault_OS repository.
-3. Replace the four existing files.
-4. Start WireVault Core again.
-5. Press Ctrl+F5 in the browser.
+Copy all patch contents into your WireVault_OS repository root and replace files.
+Restart WireVault Core and press Ctrl+F5.
 
-Behavior after this patch:
-- Media scans once when WireVault starts.
-- Additional scans only happen when you press Scan.
-- Routine successful scans do not enter Notification Center.
-- Scan errors can still notify you.
-- Page switching is instant with no full-page flash.
-- Card, dock, panel, toast, focus, and boot animations remain.
+Changes:
+- Removes the duplicate page title above the selected dock icon.
+- Keeps the page name beneath the highlighted icon.
+- Makes System Health the same size as the other Home widgets.
 
 Commit message:
-Stop automatic scan spam and remove route flash
+Clean up dock labels and widget sizing

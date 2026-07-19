@@ -178,3 +178,6 @@ body.mini-player-visible .app-shell{padding-bottom:118px}
 .mini-player-timeline{display:grid;grid-template-columns:minmax(120px,1fr) auto;align-items:center;gap:9px;margin-top:7px}.mini-player-progress{width:100%;accent-color:var(--wv-green)}.mini-player-time{color:var(--wv-muted);font-family:monospace;font-size:10px}
 .mini-player-controls{display:flex;align-items:center;gap:7px}.mini-player-volume{width:92px;accent-color:var(--wv-green)}
 @media(max-width:780px){.mini-player{grid-template-columns:48px 1fr}.mini-player-controls{grid-column:1/-1;justify-content:center}.mini-player-art{width:46px;height:46px}.mini-player-icon{width:37px;height:37px}}
+
+/* Alpha 0.9.5 */
+.active-route-title{display:none!important}.dock-center .main-dock{padding-top:4px}

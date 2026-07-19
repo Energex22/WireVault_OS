@@ -394,3 +394,10 @@
   .system-health-card{grid-column:span 1}
   .system-health-grid{grid-template-columns:1fr 1fr}
 }
+
+
+/* Alpha 0.9.6.1 definitive Home system card */
+.dashboard-widget-grid .system-health-card{
+  grid-column:span 2 !important;
+  min-height:230px !important;
+}

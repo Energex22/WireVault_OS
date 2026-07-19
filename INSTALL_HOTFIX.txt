@@ -1,12 +1,13 @@
-WireVault Alpha 0.9.3 No-Flash Transition Hotfix
+WireVault Alpha 0.9.6.1 Home System Card Hotfix
 
-Required baseline: Alpha 0.9.2 Boot Animation
+Required baseline: Alpha 0.9.6
 
-1. Copy the css and js folders into your WireVault_OS repository.
-2. Replace css/animations.css and js/animation-runtime.js.
+1. Copy the js and css folders into your WireVault_OS repository.
+2. Replace js/views/home-view.js and css/views.css.
 3. Restart WireVault Core.
 4. Press Ctrl+F5.
-5. Test switching between pages.
+
+This hotfix replaces the old Home System Health widget with the full Raspberry Pi card and removes the separate CPU Temperature, Memory, and Storage widgets.
 
 Commit message:
-Remove page transition flashing
+Fix Home Raspberry Pi system card

@@ -1,0 +1,13 @@
+WireVault Alpha 0.8.1 Folder Selector Hotfix
+
+Required baseline: Alpha 0.8 Library Manager
+
+1. Close the running WireVault Core command window.
+2. Copy the backend folder from this patch into your WireVault_OS repository.
+3. Replace backend/wirevault_core.py.
+4. Run start_core_windows.bat again.
+5. Refresh WireVault in the browser.
+6. Open Files and press Browse.
+
+Commit message:
+Fix folder selector API endpoints

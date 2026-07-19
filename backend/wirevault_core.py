@@ -239,44 +239,6 @@ class WireVaultHandler(SimpleHTTPRequestHandler):
             return
 
 
-        if parsed.path == "/api/folder-picker":
-            payload = self.read_json()
-            media_type = str(payload.get("media_type", "")).strip()
-            title = str(payload.get("title", "Select WireVault Folder")).strip()
-            initial = str(payload.get("initial", "")).strip()
-            selected = choose_folder_native(title=title, initial=initial)
-
-            if not selected:
-                self.send_json({"cancelled": True, "path": None})
-                return
-
-            resolved = str(Path(selected).expanduser().resolve())
-            if media_type:
-                folders = self.core.settings.setdefault("media_folders", {})
-                folders[media_type] = resolved
-                save_settings(self.core.paths.settings, self.core.settings)
-                self.core.events.publish("settings.updated", self.core.settings)
-
-            self.send_json({
-                "cancelled": False,
-                "media_type": media_type or None,
-                "path": resolved,
-                "settings": self.core.settings,
-            })
-            return
-
-        if parsed.path == "/api/open-folder":
-            payload = self.read_json()
-            requested = str(payload.get("path", "")).strip()
-            if not requested:
-                self.send_json({"error": "path is required"}, 400)
-                return
-            if not open_folder_native(requested):
-                self.send_json({"error": "folder could not be opened"}, 400)
-                return
-            self.send_json({"opened": True, "path": requested})
-            return
-
         if parsed.path == "/api/notifications":
             query = parse_qs(parsed.query)
             limit = int(query.get("limit", ["50"])[0])
@@ -358,6 +320,44 @@ class WireVaultHandler(SimpleHTTPRequestHandler):
             save_settings(self.core.paths.settings, self.core.settings)
             self.core.events.publish("settings.updated", self.core.settings)
             self.send_json(self.core.settings)
+            return
+
+        if parsed.path == "/api/folder-picker":
+            payload = self.read_json()
+            media_type = str(payload.get("media_type", "")).strip()
+            title = str(payload.get("title", "Select WireVault Folder")).strip()
+            initial = str(payload.get("initial", "")).strip()
+            selected = choose_folder_native(title=title, initial=initial)
+
+            if not selected:
+                self.send_json({"cancelled": True, "path": None})
+                return
+
+            resolved = str(Path(selected).expanduser().resolve())
+            if media_type:
+                folders = self.core.settings.setdefault("media_folders", {})
+                folders[media_type] = resolved
+                save_settings(self.core.paths.settings, self.core.settings)
+                self.core.events.publish("settings.updated", self.core.settings)
+
+            self.send_json({
+                "cancelled": False,
+                "media_type": media_type or None,
+                "path": resolved,
+                "settings": self.core.settings,
+            })
+            return
+
+        if parsed.path == "/api/open-folder":
+            payload = self.read_json()
+            requested = str(payload.get("path", "")).strip()
+            if not requested:
+                self.send_json({"error": "path is required"}, 400)
+                return
+            if not open_folder_native(requested):
+                self.send_json({"error": "folder could not be opened"}, 400)
+                return
+            self.send_json({"opened": True, "path": requested})
             return
 
         if parsed.path == "/api/notifications":

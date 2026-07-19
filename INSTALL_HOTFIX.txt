@@ -1,17 +1,17 @@
-WireVault Alpha 0.9.6.2 — Home Cache Bust Hotfix
+WireVault Alpha 1.2.1 — Vault Search Visual Fix
 
-Required baseline: Alpha 0.9.6.1
+Required baseline: Alpha 1.2 Vault Search Prototype
 
-1. Copy all patch files into your WireVault_OS repository root.
-2. Replace the existing files.
-3. Close every open WireVault browser tab.
-4. Close WireVault Core.
-5. Start WireVault Core again.
-6. Open a new browser tab to WireVault.
+1. Copy the css folder into your WireVault_OS repository.
+2. Replace css/vault-search.css.
+3. Restart WireVault Core.
+4. Close old WireVault tabs and open a new one, or press Ctrl+F5.
 
-This update changes the JavaScript and CSS URLs to versioned URLs so Chromium cannot reuse the old Home module.
-
-The corrected Home page contains one large Raspberry Pi System card and does not contain separate CPU Temperature, Memory, or Storage cards.
+Changes:
+- Vault Search sits slightly above the bottom edge.
+- The drawer now has a complete bright-green border.
+- The drawer opens slightly taller.
+- Selected-result outlines and glows are no longer clipped at the top.
 
 Commit message:
-Force reload of corrected Home system card
+Polish Vault Search drawer and selection outline

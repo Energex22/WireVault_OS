@@ -401,3 +401,32 @@
   grid-column:span 2 !important;
   min-height:230px !important;
 }
+
+
+/* Alpha 1.2.3 — compact flat System Status */
+.system-health-card{display:none!important}
+.dashboard-widget-grid .system-status-card{
+  grid-column:span 2;
+  min-height:154px;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  gap:10px;
+  padding:14px 16px;
+  text-align:left;
+}
+.system-status-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.system-status-header .widget-heading{align-items:flex-start}
+.system-status-header .widget-heading strong,.system-status-header .widget-heading small{display:block}
+.system-status-header .widget-heading small{margin-top:3px;color:var(--wv-muted)}
+.system-status-health{flex:0 0 auto;color:var(--wv-green);font-size:9px;font-weight:1000;letter-spacing:1px;white-space:nowrap}
+.system-status-health.offline{color:#ffd166}
+.system-status-rows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:22px;row-gap:7px}
+.system-status-row{min-width:0;display:grid;grid-template-columns:62px auto minmax(54px,1fr);align-items:center;gap:8px;padding:2px 0}
+.system-status-row small{color:var(--wv-muted);font-size:10px}
+.system-status-row>strong{color:#fff;font-size:13px;white-space:nowrap}
+.system-status-meter{height:5px;overflow:hidden;border-radius:999px;background:rgba(120,255,22,.10)}
+.system-status-meter-fill{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#3c9e00,var(--wv-green));box-shadow:0 0 7px rgba(120,255,22,.30)}
+.system-status-note{grid-column:3;overflow:hidden;color:var(--wv-muted);font-size:9px;text-overflow:ellipsis;white-space:nowrap}
+.system-status-open{color:var(--wv-green);font-size:9px;font-weight:800;letter-spacing:.4px;text-align:right}
+@media(max-width:760px){.dashboard-widget-grid .system-status-card{grid-column:span 2;min-height:190px}.system-status-rows{grid-template-columns:1fr}}
+@media(max-width:520px){.dashboard-widget-grid .system-status-card{grid-column:span 1}.system-status-row{grid-template-columns:58px auto minmax(48px,1fr)}}

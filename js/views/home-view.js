@@ -23,7 +23,7 @@ const formatUptime = seconds => {
 
 export function createHomeView({ store, bus, coreApi, library, router }) {
   const wrapper = el('div',{
-    'data-wirevault-home-version':'0.9.6.2'
+    'data-wirevault-home-version':'1.2.3'
   });
 
   async function refreshDashboard() {
@@ -61,23 +61,35 @@ function systemHealthCard({ system, memory, storage }) {
   const load = system.load_average || {};
   const online = coreApi.online;
 
-  const metric = (label, value, detail = '') =>
-    el('div',{className:'system-health-metric'},[
+  const row = (label, value, meter = null, note = '') => {
+    const children = [
       el('small',{text:label}),
-      el('strong',{text:value}),
-      detail ? el('span',{text:detail}) : null
-    ].filter(Boolean));
+      el('strong',{text:value})
+    ];
 
-  const card = el('button',{
-    className:'dashboard-widget system-health-card focusable',
+    if (Number.isFinite(meter)) {
+      const fill = el('span',{className:'system-status-meter-fill'});
+      fill.style.width = `${Math.max(0, Math.min(100, meter))}%`;
+      children.push(el('span',{className:'system-status-meter'},[fill]));
+    }
+
+    if (note) {
+      children.push(el('span',{className:'system-status-note',text:note}));
+    }
+
+    return el('div',{className:'system-status-row'},children);
+  };
+
+  return el('button',{
+    className:'dashboard-widget system-status-card focusable',
     type:'button',
     onclick:() => document.getElementById('controlCenterButton')?.click()
   },[
-    el('div',{className:'system-health-header'},[
+    el('div',{className:'system-status-header'},[
       el('div',{className:'widget-heading'},[
         wvIcon('system','widget-icon'),
         el('div',{},[
-          el('strong',{text:'Raspberry Pi System'}),
+          el('strong',{text:'System Status'}),
           el('small',{
             text:online
               ? `${system.hostname || 'WireVault'} · ${formatUptime(system.uptime_seconds)} uptime`
@@ -86,55 +98,44 @@ function systemHealthCard({ system, memory, storage }) {
         ])
       ]),
       el('span',{
-        className:`system-health-state ${online ? 'online' : 'offline'}`,
-        text:online ? 'HEALTHY' : 'PREVIEW'
+        className:`system-status-health ${online ? 'online' : 'offline'}`,
+        text:online ? '● HEALTHY' : '● PREVIEW'
       })
     ]),
-    el('div',{className:'system-health-grid'},[
-      metric(
-        'Temperature',
-        Number.isFinite(system.cpu_temperature_c)
-          ? `${system.cpu_temperature_c}°C`
-          : '—',
-        'CPU'
-      ),
-      metric(
-        'CPU Load',
+    el('div',{className:'system-status-rows'},[
+      row(
+        'CPU',
         Number.isFinite(load.one) ? String(load.one) : '—',
-        '1 minute'
+        null,
+        Number.isFinite(system.cpu_temperature_c)
+          ? `${system.cpu_temperature_c}°C temperature`
+          : 'Load average'
       ),
-      metric(
+      row(
         'Memory',
         Number.isFinite(memory.percent) ? `${memory.percent}%` : '—',
+        memory.percent,
         Number.isFinite(memory.used_bytes)
           ? `${formatBytes(memory.used_bytes)} used`
           : ''
       ),
-      metric(
+      row(
         'Storage',
         Number.isFinite(storage.percent) ? `${storage.percent}%` : '—',
+        storage.percent,
         Number.isFinite(storage.free_bytes)
           ? `${formatBytes(storage.free_bytes)} free`
           : ''
       ),
-      metric(
-        'Architecture',
+      row(
+        'Platform',
         system.machine || '—',
+        null,
         system.python ? `Python ${system.python}` : ''
-      ),
-      metric(
-        'Core',
-        online ? 'Online' : 'Offline',
-        online ? 'APIs connected' : 'Start Core'
       )
     ]),
-    el('small',{
-      className:'system-health-open',
-      text:'Open Control Center for full system details'
-    })
+    el('span',{className:'system-status-open',text:'Open Control Center'})
   ]);
-
-  return card;
 }
 
   function render() {

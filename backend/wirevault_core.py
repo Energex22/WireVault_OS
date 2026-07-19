@@ -14,12 +14,91 @@ import os
 import signal
 import time
 import shutil
+import subprocess
 
 from config import load_settings, save_settings, project_paths
 from database import Database
 from event_stream import EventStream
 from media_scanner import MediaScanner
 from system_monitor import system_status
+
+
+
+def choose_folder_native(title: str = "Select Folder", initial: str = "") -> str | None:
+    initial_path = str(Path(initial).expanduser()) if initial else str(Path.home())
+
+    if sys.platform.startswith("win"):
+        ps_script = (
+            "Add-Type -AssemblyName System.Windows.Forms;"
+            "$d=New-Object System.Windows.Forms.FolderBrowserDialog;"
+            "$d.Description=$env:WV_PICKER_TITLE;"
+            "$d.SelectedPath=$env:WV_PICKER_INITIAL;"
+            "$d.ShowNewFolderButton=$true;"
+            "$r=$d.ShowDialog();"
+            "if($r -eq [System.Windows.Forms.DialogResult]::OK){"
+            "[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
+            "Write-Output $d.SelectedPath}"
+        )
+        environment = os.environ.copy()
+        environment["WV_PICKER_TITLE"] = title
+        environment["WV_PICKER_INITIAL"] = initial_path
+        try:
+            result = subprocess.run(
+                ["powershell", "-NoProfile", "-STA", "-Command", ps_script],
+                capture_output=True,
+                text=True,
+                env=environment,
+                timeout=300,
+            )
+            selected = result.stdout.strip()
+            return selected or None
+        except (OSError, subprocess.SubprocessError):
+            return None
+
+    commands = [
+        ["zenity", "--file-selection", "--directory", f"--title={title}", f"--filename={initial_path}/"],
+        ["kdialog", "--getexistingdirectory", initial_path, "--title", title],
+    ]
+    for command in commands:
+        try:
+            result = subprocess.run(command, capture_output=True, text=True, timeout=300)
+            selected = result.stdout.strip()
+            if result.returncode == 0 and selected:
+                return selected
+        except (OSError, subprocess.SubprocessError):
+            continue
+
+    try:
+        import tkinter as tk
+        from tkinter import filedialog
+        root = tk.Tk()
+        root.withdraw()
+        root.attributes("-topmost", True)
+        selected = filedialog.askdirectory(
+            title=title,
+            initialdir=initial_path,
+            mustexist=False,
+        )
+        root.destroy()
+        return selected or None
+    except Exception:
+        return None
+
+
+def open_folder_native(path_value: str) -> bool:
+    folder = Path(path_value).expanduser()
+    if not folder.exists() or not folder.is_dir():
+        return False
+    try:
+        if sys.platform.startswith("win"):
+            os.startfile(str(folder))
+        elif sys.platform == "darwin":
+            subprocess.Popen(["open", str(folder)])
+        else:
+            subprocess.Popen(["xdg-open", str(folder)])
+        return True
+    except OSError:
+        return False
 
 
 class CoreState:
@@ -157,6 +236,45 @@ class WireVaultHandler(SimpleHTTPRequestHandler):
             query = parse_qs(parsed.query)
             limit = int(query.get("limit", ["30"])[0])
             self.send_json(self.core.database.recent_activity(limit))
+            return
+
+
+        if parsed.path == "/api/folder-picker":
+            payload = self.read_json()
+            media_type = str(payload.get("media_type", "")).strip()
+            title = str(payload.get("title", "Select WireVault Folder")).strip()
+            initial = str(payload.get("initial", "")).strip()
+            selected = choose_folder_native(title=title, initial=initial)
+
+            if not selected:
+                self.send_json({"cancelled": True, "path": None})
+                return
+
+            resolved = str(Path(selected).expanduser().resolve())
+            if media_type:
+                folders = self.core.settings.setdefault("media_folders", {})
+                folders[media_type] = resolved
+                save_settings(self.core.paths.settings, self.core.settings)
+                self.core.events.publish("settings.updated", self.core.settings)
+
+            self.send_json({
+                "cancelled": False,
+                "media_type": media_type or None,
+                "path": resolved,
+                "settings": self.core.settings,
+            })
+            return
+
+        if parsed.path == "/api/open-folder":
+            payload = self.read_json()
+            requested = str(payload.get("path", "")).strip()
+            if not requested:
+                self.send_json({"error": "path is required"}, 400)
+                return
+            if not open_folder_native(requested):
+                self.send_json({"error": "folder could not be opened"}, 400)
+                return
+            self.send_json({"opened": True, "path": requested})
             return
 
         if parsed.path == "/api/notifications":

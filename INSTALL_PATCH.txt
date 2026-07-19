@@ -1,13 +1,8 @@
-WireVault Alpha 0.7 Persistent Mini Player
+WireVault Alpha 0.8 Native Library Manager
 
-Required baseline: Alpha 0.6 Notification Center
+Required baseline: Alpha 0.7 Persistent Mini Player
 
-1. Copy everything in this patch into the root of your local WireVault_OS repository.
-2. Replace the existing files.
-3. Run start_core_windows.bat.
-4. Open Music and select an indexed track.
-5. Change pages and confirm the music continues.
-6. Commit and push.
+Copy all patch contents into your repository root and replace existing files.
+Run start_core_windows.bat, open Files, click Browse beside Music, choose a folder, then click Scan.
 
-Commit message:
-Add persistent mini music player
+Commit: Add native media folder selector

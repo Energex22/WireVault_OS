@@ -90,6 +90,21 @@ export class CoreApiService {
     });
   }
 
+
+chooseFolder({ mediaType = '', title = 'Select WireVault Folder', initial = '' } = {}) {
+  return this.request('/api/folder-picker', {
+    method: 'POST',
+    body: JSON.stringify({ media_type: mediaType, title, initial })
+  });
+}
+
+openFolder(path) {
+  return this.request('/api/open-folder', {
+    method: 'POST',
+    body: JSON.stringify({ path })
+  });
+}
+
   connectEvents() {
     if (!('EventSource' in window)) return;
 

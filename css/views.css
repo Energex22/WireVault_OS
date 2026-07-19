@@ -288,3 +288,16 @@
   from{opacity:0;transform:translateY(12px) scale(.992)}
   to{opacity:1;transform:translateY(0) scale(1)}
 }
+
+.library-manager-list{display:grid;gap:10px}
+.library-manager-card{display:grid;grid-template-columns:58px minmax(0,1fr) auto;align-items:center;gap:13px;padding:13px;border:1px solid rgba(120,255,22,.28);border-radius:13px;background:rgba(4,11,6,.72)}
+.library-manager-icon{width:54px;height:54px;display:grid;place-items:center;border:1px solid var(--wv-green-dim);border-radius:12px;background:#071008}
+.library-manager-svg{width:43px;height:43px}
+.library-manager-copy{min-width:0}
+.library-manager-copy strong,.library-manager-copy small,.library-manager-copy code{display:block}
+.library-manager-copy small{margin-top:3px;color:var(--wv-muted)}
+.library-folder-path{margin-top:8px;overflow:hidden;color:#fff;text-overflow:ellipsis;white-space:nowrap}
+.library-folder-path.empty{color:#ffd166}
+.library-manager-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px}
+.library-manager-actions button:disabled{cursor:not-allowed;opacity:.42}
+@media(max-width:900px){.library-manager-card{grid-template-columns:50px 1fr}.library-manager-actions{grid-column:1/-1;justify-content:flex-start}}

@@ -1,14 +1,14 @@
-# WireVault OS Alpha 0.7 — Persistent Mini Player
+# WireVault OS Alpha 0.8 — Native Library Manager
 
-Adds background music playback across WireVault pages.
+Adds native folder selection in Files.
 
-- Play/pause
-- Previous/next
-- Seek bar
-- Time and duration
-- Volume
-- Repeat
-- Stop/close
-- Secure local-media endpoint restricted to configured media folders
+- Browse for Music, Pictures, Games/ROMs, and Videos
+- Selected path saves automatically
+- Open Folder button
+- Scan button
+- Windows native folder selector
+- Linux/Raspberry Pi support through Zenity, KDialog, or Tk fallback
 
-Commit: `Add persistent mini music player`
+Recommended media folders should remain outside the application directory.
+
+Commit: `Add native media folder selector`

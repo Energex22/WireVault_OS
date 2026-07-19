@@ -83,6 +83,13 @@ export class CoreApiService {
     return this.request(`/api/notifications?limit=${limit}`);
   }
 
+  createNotification(payload) {
+    return this.request('/api/notifications', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  }
+
   connectEvents() {
     if (!('EventSource' in window)) return;
 

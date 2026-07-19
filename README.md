@@ -1,37 +1,39 @@
-# WireVault OS 4.0 — Alpha 0.5 Dynamic Backgrounds
+# WireVault OS 4.0 — Alpha 0.6 Notification Center
 
-This update adds section-aware visual atmosphere without changing navigation or
-backend behavior.
+This release adds a live slide-out Notification Center.
 
 ## Added
 
-- Animated hex-grid base background
-- Slow drifting particles
-- Route-aware ambient lighting
-- Smooth background transition when changing sections
-- Home glow field
-- Streaming theater lighting
-- Games arcade grid
-- Music pulse-wave atmosphere
-- Pictures blurred gallery lighting
-- Files blueprint grid
-- Browser network rings
-- Settings technical glow
-- Reduced-motion support
+- Notification button in the top status area
+- Unread notification badge
+- Slide-out notification panel
+- Notification history from WireVault Core
+- Live updates through Server-Sent Events
+- Library-scan completion notifications
+- Notification level styling:
+  - info
+  - success
+  - warning
+  - error
+- Relative time labels
+- Clear View button
+- Escape closes the panel
+- Opening the panel marks the current notifications as seen
 
-## Glass console surfaces
+## Core integration
 
-Cards, widgets, settings rows, library items, and panels now use:
+The Notification Center uses:
 
-- translucent dark graphite backgrounds
-- frosted blur
-- neon-green edges
-- subtle inner highlights
-- softer depth shadows
+    GET /api/notifications
+
+and listens for:
+
+    notification.created
+    library.scan.complete
 
 ## Git commit suggestion
 
-    Add dynamic section backgrounds and glass UI
+    Add live notification center
 
 ## Start
 

@@ -42,7 +42,11 @@
       <div class="status-item"><span>📶</span><small>Connected</small></div>
       <div class="status-item"><span>ᛒ</span><small>Bluetooth</small></div>
       <div class="status-item"><span>🎮</span><small>Controller</small></div>
-      <button id="controlCenterButton" class="icon-button focusable" type="button" aria-label="Open Control Center">☰</button>
+      <button id="notificationCenterButton" class="icon-button notification-button focusable" type="button" aria-label="Open Notifications">
+  <span aria-hidden="true">◉</span>
+  <b id="notificationBadge" class="notification-badge hidden">0</b>
+</button>
+<button id="controlCenterButton" class="icon-button focusable" type="button" aria-label="Open Control Center">☰</button>
     </section>
   </header>
 
@@ -58,7 +62,24 @@
     <section id="appView" class="app-view" aria-live="polite"></section>
   </main>
 
-  <aside id="controlCenter" class="control-center" aria-hidden="true">
+  <aside id="notificationCenter" class="notification-center" aria-hidden="true">
+  <div class="notification-header">
+    <div>
+      <small>WIREVAULT OS</small>
+      <h2>NOTIFICATIONS</h2>
+    </div>
+    <button id="closeNotificationCenter" class="icon-button focusable" type="button">×</button>
+  </div>
+
+  <div class="notification-toolbar">
+    <span id="notificationSummary">No notifications</span>
+    <button id="clearNotificationView" class="secondary-button focusable" type="button">Clear View</button>
+  </div>
+
+  <div id="notificationList" class="notification-list"></div>
+</aside>
+
+<aside id="controlCenter" class="control-center" aria-hidden="true">
     <div class="control-header">
       <div><small>WIREVAULT OS</small><h2>CONTROL CENTER</h2></div>
       <button id="closeControlCenter" class="icon-button focusable" type="button">×</button>

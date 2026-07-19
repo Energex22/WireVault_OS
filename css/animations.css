@@ -525,3 +525,41 @@ body.wv-booting .mini-player {
     letter-spacing: 5px;
   }
 }
+
+
+/* Alpha 0.9.3 — no-flash route transitions */
+.wv-route-curtain {
+  display: none !important;
+}
+
+body.wv-route-leaving .wv-route-curtain,
+body.wv-route-entering .wv-route-curtain {
+  opacity: 0 !important;
+  backdrop-filter: none !important;
+}
+
+body.wv-route-entering .app-view > * {
+  animation: wvPageEnterNoFlash 260ms var(--wv-ease-standard) both !important;
+}
+
+@keyframes wvPageEnterNoFlash {
+  from {
+    opacity: .72;
+    transform: translate3d(0,8px,0) scale(.996);
+    filter: none;
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0,0,0) scale(1);
+    filter: none;
+  }
+}
+
+.app-view {
+  isolation: isolate;
+}
+
+.app-view > * {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}

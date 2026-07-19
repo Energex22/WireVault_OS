@@ -1,12 +1,12 @@
-WireVault Alpha 0.9.1 Animation Stability Hotfix
+WireVault Alpha 0.9.3 No-Flash Transition Hotfix
 
-Required baseline: Alpha 0.9 Animation Foundation
+Required baseline: Alpha 0.9.2 Boot Animation
 
-Copy the css and js folders into your WireVault_OS repository and replace:
-- css/animations.css
-- js/animation-runtime.js
-
-Restart WireVault Core and press Ctrl+F5.
+1. Copy the css and js folders into your WireVault_OS repository.
+2. Replace css/animations.css and js/animation-runtime.js.
+3. Restart WireVault Core.
+4. Press Ctrl+F5.
+5. Test switching between pages.
 
 Commit message:
-Fix route flashing and focus halo movement
+Remove page transition flashing

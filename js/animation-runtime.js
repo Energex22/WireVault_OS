@@ -90,20 +90,15 @@ function animateRoute(route) {
   hideHalo();
   clearRouteClasses();
 
-  body.classList.add('wv-route-leaving');
-
-  routeTimer = setTimeout(() => {
-    body.classList.remove('wv-route-leaving');
-    void body.offsetWidth;
+  requestAnimationFrame(() => {
     body.classList.add('wv-route-entering');
 
     enterTimer = setTimeout(() => {
       body.classList.remove('wv-route-entering');
       updateHalo(document.activeElement);
-    }, 390);
-  }, 90);
+    }, 280);
+  });
 }
-
 function currentRoute() {
   return (
     window.WireVault?.store?.get('navigation.route') ||

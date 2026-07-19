@@ -1,18 +1,26 @@
-# WireVault Alpha 0.9.2 — Boot Animation
+# WireVault Alpha 0.9.4
 
-## Added
+## Fixed
 
-- Full-screen WireVault startup sequence
-- Animated emblem and neon rings
-- Moving technical grid
-- Boot status messages
-- Progress bar
-- Smooth fade into the Home dashboard
-- Enter, Escape, Space, and click-to-skip
-- Full animation once per browser session
-- Short handoff on later refreshes
-- `WireVaultBoot.replay()` developer command
+- Removed the remaining single flash when switching pages.
+- Removed repeated automatic media scans.
+- Removed routine scan-complete notification spam.
+
+## New scan behavior
+
+- One scan when WireVault Core starts.
+- Manual scans through **Files → Scan**.
+- Scan failures remain eligible for notifications.
+- Successful scans update status and activity without filling Notification Center.
+
+## Animations retained
+
+- Boot animation
+- Dock selection
+- Card hover and controller focus
+- Control Center and Notification Center
+- Toasts and scan spinner
 
 ## Commit
 
-`Add WireVault boot animation`
+`Stop automatic scan spam and remove route flash`

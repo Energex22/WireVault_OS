@@ -455,20 +455,6 @@ window.WireVault = {bus,store,router,settings,registry,clock,library,coreApi,mus
     window.WireVault?.toast?.(payload.title || 'New notification');
   });
 
-  window.WireVault?.bus?.on('core:library.scan.complete', event => {
-    const payload = event.payload || {};
-    notifications = [
-      {
-        id: `scan-${Date.now()}`,
-        level: payload.error ? 'error' : 'success',
-        title: payload.error ? 'Library Scan Failed' : 'Library Scan Complete',
-        detail: payload.error || `Indexed ${payload.indexed || 0} items`,
-        created_at: Date.now() / 1000
-      },
-      ...notifications
-    ];
-    render();
-  });
 
   render();
 

@@ -563,3 +563,16 @@ body.wv-route-entering .app-view > * {
   backface-visibility: hidden;
   transform: translateZ(0);
 }
+
+
+/* Alpha 0.9.4 — stable instant route switching */
+body.wv-route-entering .app-view > *,
+body.wv-route-leaving .app-view > *,
+.app-view > * {
+  animation: none !important;
+  filter: none !important;
+}
+
+.wv-route-curtain {
+  display: none !important;
+}

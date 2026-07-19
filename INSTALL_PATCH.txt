@@ -1,15 +1,20 @@
-WireVault Alpha 0.9.2 Boot Animation
+WireVault Alpha 0.9.4 — Quiet Media and No-Flash Navigation
 
-Required baseline: Alpha 0.9.1 Animation Stability Hotfix
+Required baseline: Alpha 0.9.3
 
-1. Copy all patch files into your WireVault_OS repository root.
-2. Replace index.html, css/animations.css, and js/animation-runtime.js.
-3. Restart WireVault Core.
-4. Press Ctrl+F5.
+1. Close WireVault Core.
+2. Copy all folders from this patch into your WireVault_OS repository.
+3. Replace the four existing files.
+4. Start WireVault Core again.
+5. Press Ctrl+F5 in the browser.
 
-The full boot animation shows once per browser session.
-Refreshes in the same session use a short startup handoff.
-Press Enter, Escape, Space, or click the skip message to skip.
+Behavior after this patch:
+- Media scans once when WireVault starts.
+- Additional scans only happen when you press Scan.
+- Routine successful scans do not enter Notification Center.
+- Scan errors can still notify you.
+- Page switching is instant with no full-page flash.
+- Card, dock, panel, toast, focus, and boot animations remain.
 
 Commit message:
-Add WireVault boot animation
+Stop automatic scan spam and remove route flash

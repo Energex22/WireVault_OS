@@ -488,11 +488,10 @@ class WireVaultHandler(SimpleHTTPRequestHandler):
 
 
 def scanner_loop(core: CoreState) -> None:
+    # Scan once when WireVault starts. Further scans are user-triggered
+    # through the Files page or API, avoiding constant disk activity.
     core.scan_library()
-    while not core.stop_event.wait(
-        max(2, int(core.settings.get("scan_interval_seconds", 10)))
-    ):
-        core.scan_library()
+    core.stop_event.wait()
 
 
 def configure_logging(log_path: Path) -> None:

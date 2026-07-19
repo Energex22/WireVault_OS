@@ -90,14 +90,9 @@ function animateRoute(route) {
   hideHalo();
   clearRouteClasses();
 
-  requestAnimationFrame(() => {
-    body.classList.add('wv-route-entering');
-
-    enterTimer = setTimeout(() => {
-      body.classList.remove('wv-route-entering');
-      updateHalo(document.activeElement);
-    }, 280);
-  });
+  // Page contents switch immediately. Component hover, focus, panel,
+  // toast, dock, and boot animations remain enabled.
+  requestAnimationFrame(() => updateHalo(document.activeElement));
 }
 function currentRoute() {
   return (

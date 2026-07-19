@@ -15,6 +15,7 @@ import signal
 import time
 import shutil
 import subprocess
+import sys
 
 from config import load_settings, save_settings, project_paths
 from database import Database

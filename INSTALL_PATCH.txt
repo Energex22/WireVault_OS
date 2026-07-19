@@ -1,21 +1,19 @@
-WireVault Alpha 1.4 — User Profiles Foundation
+WireVault Alpha 1.5 — Profile Personalization
 
-Required baseline: Alpha 1.3 Home Layout Editor
+Required baseline: Alpha 1.4 User Profiles Foundation
 
 1. Close WireVault Core and all browser tabs.
-2. Copy all patch contents into your repository root.
+2. Copy all patch contents into the repository root.
 3. Replace the existing files.
 4. Restart WireVault Core.
-5. Open WireVault in a new browser tab.
+5. Open WireVault in a fresh browser tab.
 
 Added:
-- Profile button in the top status area.
-- Profile switcher panel.
-- Create and delete local profiles.
-- Separate Home widget layouts per profile.
-- Active profile is remembered.
-
-Profiles are local-browser only in this foundation release. A later backend update can synchronize them between devices.
+- Rename profiles.
+- Choose profile avatars.
+- Choose per-profile accent colors.
+- Accent color changes the WireVault neon highlights.
+- Profile-specific personalization is remembered locally.
 
 Commit message:
-Add local user profile foundation
+Add profile personalization options

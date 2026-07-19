@@ -1,20 +1,18 @@
-# WireVault Alpha 1.4 — User Profiles Foundation
+# WireVault Alpha 1.5 — Profile Personalization
 
 ## Added
 
-- Profile button in the persistent top bar
-- Slide-out profile switcher
-- Create additional profiles
-- Delete inactive profiles
-- Remember active profile
-- Independent Home widget arrangements for each profile
-
-## Current scope
-
-Profiles are stored in the browser for this foundation release. They are not
-password protected and do not yet synchronize between a Windows development
-machine and Raspberry Pi.
+- Rename the current profile
+- Choose from multiple avatar symbols
+- Choose a per-profile accent:
+  - Vault Green
+  - Electric Blue
+  - Neon Purple
+  - Amber
+  - Crimson
+- Accent selection updates WireVault's primary neon interface color
+- Existing profiles are migrated automatically with Vault Green as default
 
 ## Commit
 
-`Add local user profile foundation`
+`Add profile personalization options`

@@ -11,6 +11,25 @@ const input = document.getElementById('newProfileName');
 const avatar = document.getElementById('profileAvatar');
 const nameLabel = document.getElementById('profileName');
 
+const editor = document.getElementById('profileEditor');
+const editorTitle = document.getElementById('profileEditorTitle');
+const editorName = document.getElementById('profileEditorName');
+const avatarChoices = document.getElementById('profileAvatarChoices');
+const accentChoices = document.getElementById('profileAccentChoices');
+const saveChanges = document.getElementById('saveProfileChanges');
+
+const avatarOptions = ['J','A','B','C','D','G','M','P','R','S','V','★'];
+const accentOptions = [
+  { id:'green', label:'Vault Green', color:'#78ff16' },
+  { id:'blue', label:'Electric Blue', color:'#32b7ff' },
+  { id:'purple', label:'Neon Purple', color:'#b56cff' },
+  { id:'amber', label:'Amber', color:'#ffbf3f' },
+  { id:'red', label:'Crimson', color:'#ff5f57' }
+];
+
+let editingAvatar = 'J';
+let editingAccent = 'green';
+
 function slug(name) {
   return name
     .trim()
@@ -19,16 +38,31 @@ function slug(name) {
     .replace(/^-+|-+$/g, '') || `profile-${Date.now()}`;
 }
 
+function normalizeProfile(profile) {
+  return {
+    id: profile.id,
+    name: profile.name || 'User',
+    avatar: profile.avatar || (profile.name || 'U').charAt(0).toUpperCase(),
+    accent: profile.accent || 'green',
+    createdAt: profile.createdAt || Date.now()
+  };
+}
+
 function loadProfiles() {
   try {
     const saved = JSON.parse(localStorage.getItem(profileStorageKey) || '[]');
-    if (Array.isArray(saved) && saved.length) return saved;
+    if (Array.isArray(saved) && saved.length) {
+      const normalized = saved.map(normalizeProfile);
+      localStorage.setItem(profileStorageKey, JSON.stringify(normalized));
+      return normalized;
+    }
   } catch {}
 
   const defaults = [{
     id: 'justin',
     name: 'Justin',
     avatar: 'J',
+    accent: 'green',
     createdAt: Date.now()
   }];
 
@@ -38,7 +72,10 @@ function loadProfiles() {
 }
 
 function saveProfiles(profiles) {
-  localStorage.setItem(profileStorageKey, JSON.stringify(profiles));
+  localStorage.setItem(
+    profileStorageKey,
+    JSON.stringify(profiles.map(normalizeProfile))
+  );
 }
 
 function activeProfileId() {
@@ -54,10 +91,25 @@ function activeProfile() {
   return profiles.find(profile => profile.id === activeProfileId()) || profiles[0];
 }
 
+function accentDefinition(id) {
+  return accentOptions.find(option => option.id === id) || accentOptions[0];
+}
+
+function applyAccent(profile) {
+  const accent = accentDefinition(profile.accent);
+  document.documentElement.style.setProperty('--wv-green', accent.color);
+  document.documentElement.style.setProperty(
+    '--wv-green-dim',
+    `${accent.color}88`
+  );
+  document.documentElement.dataset.profileAccent = accent.id;
+}
+
 function updateTopBar() {
   const profile = activeProfile();
-  avatar.textContent = profile.avatar || profile.name.charAt(0).toUpperCase();
+  avatar.textContent = profile.avatar;
   nameLabel.textContent = profile.name;
+  applyAccent(profile);
 }
 
 function openPanel() {
@@ -66,6 +118,7 @@ function openPanel() {
   panel.setAttribute('aria-hidden', 'false');
   backdrop.setAttribute('aria-hidden', 'false');
   renderProfiles();
+  populateEditor();
 }
 
 function closePanel() {
@@ -75,14 +128,18 @@ function closePanel() {
   backdrop.setAttribute('aria-hidden', 'true');
 }
 
-function switchProfile(profile) {
-  localStorage.setItem(activeProfileKey, profile.id);
-  updateTopBar();
-  closePanel();
-
+function emitProfileChanged(profile) {
   window.dispatchEvent(new CustomEvent('wirevault:profile-changed', {
     detail: profile
   }));
+}
+
+function switchProfile(profile) {
+  localStorage.setItem(activeProfileKey, profile.id);
+  updateTopBar();
+  renderProfiles();
+  populateEditor();
+  emitProfileChanged(profile);
 
   window.WireVault?.toast?.(`Switched to ${profile.name}`);
   window.WireVault?.router?.open('home');
@@ -101,12 +158,11 @@ function deleteProfile(profile) {
   if (activeProfileId() === profile.id) {
     localStorage.setItem(activeProfileKey, updated[0].id);
     updateTopBar();
-    window.dispatchEvent(new CustomEvent('wirevault:profile-changed', {
-      detail: updated[0]
-    }));
+    emitProfileChanged(updated[0]);
   }
 
   renderProfiles();
+  populateEditor();
 }
 
 function profileCard(profile) {
@@ -120,7 +176,9 @@ function profileCard(profile) {
 
   const icon = document.createElement('span');
   icon.className = 'profile-card-avatar';
-  icon.textContent = profile.avatar || profile.name.charAt(0).toUpperCase();
+  icon.textContent = profile.avatar;
+  icon.style.borderColor = accentDefinition(profile.accent).color;
+  icon.style.color = accentDefinition(profile.accent).color;
 
   const copy = document.createElement('span');
   copy.className = 'profile-card-copy';
@@ -154,6 +212,85 @@ function renderProfiles() {
   loadProfiles().forEach(profile => list.append(profileCard(profile)));
 }
 
+function renderAvatarChoices() {
+  avatarChoices.replaceChildren();
+
+  avatarOptions.forEach(option => {
+    const choice = document.createElement('button');
+    choice.type = 'button';
+    choice.className =
+      `profile-avatar-choice focusable ${editingAvatar === option ? 'active' : ''}`;
+    choice.textContent = option;
+    choice.addEventListener('click', () => {
+      editingAvatar = option;
+      renderAvatarChoices();
+    });
+    avatarChoices.append(choice);
+  });
+}
+
+function renderAccentChoices() {
+  accentChoices.replaceChildren();
+
+  accentOptions.forEach(option => {
+    const choice = document.createElement('button');
+    choice.type = 'button';
+    choice.className =
+      `profile-accent-choice focusable ${editingAccent === option.id ? 'active' : ''}`;
+    choice.title = option.label;
+
+    const dot = document.createElement('span');
+    dot.style.background = option.color;
+
+    const text = document.createElement('small');
+    text.textContent = option.label;
+
+    choice.append(dot, text);
+    choice.addEventListener('click', () => {
+      editingAccent = option.id;
+      renderAccentChoices();
+    });
+    accentChoices.append(choice);
+  });
+}
+
+function populateEditor() {
+  const profile = activeProfile();
+  editorTitle.textContent = profile.name;
+  editorName.value = profile.name;
+  editingAvatar = profile.avatar;
+  editingAccent = profile.accent;
+  renderAvatarChoices();
+  renderAccentChoices();
+}
+
+function saveEditor() {
+  const name = editorName.value.trim();
+  if (!name) {
+    window.WireVault?.toast?.('Profile name cannot be empty');
+    return;
+  }
+
+  const profiles = loadProfiles();
+  const id = activeProfileId();
+  const index = profiles.findIndex(profile => profile.id === id);
+  if (index < 0) return;
+
+  profiles[index] = {
+    ...profiles[index],
+    name,
+    avatar: editingAvatar,
+    accent: editingAccent
+  };
+
+  saveProfiles(profiles);
+  updateTopBar();
+  renderProfiles();
+  populateEditor();
+  emitProfileChanged(profiles[index]);
+  window.WireVault?.toast?.('Profile saved');
+}
+
 form.addEventListener('submit', event => {
   event.preventDefault();
   const name = input.value.trim();
@@ -171,6 +308,7 @@ form.addEventListener('submit', event => {
     id,
     name,
     avatar: name.charAt(0).toUpperCase(),
+    accent: 'green',
     createdAt: Date.now()
   };
 
@@ -180,6 +318,7 @@ form.addEventListener('submit', event => {
   switchProfile(profile);
 });
 
+saveChanges?.addEventListener('click', saveEditor);
 button?.addEventListener('click', openPanel);
 closeButton?.addEventListener('click', closePanel);
 backdrop?.addEventListener('click', closePanel);

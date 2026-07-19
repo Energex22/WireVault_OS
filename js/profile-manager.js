@@ -194,7 +194,18 @@ function profileCard(profile) {
   select.addEventListener('click', () => switchProfile(profile));
   card.append(select);
 
-  if (!current) {
+  if (current) {
+    const edit = document.createElement('button');
+    edit.type = 'button';
+    edit.className = 'profile-edit-button focusable';
+    edit.textContent = 'Edit';
+    edit.addEventListener('click', () => {
+      populateEditor();
+      editor.scrollIntoView({ behavior:'smooth', block:'start' });
+      setTimeout(() => editorName.focus(), 250);
+    });
+    card.append(edit);
+  } else {
     const remove = document.createElement('button');
     remove.type = 'button';
     remove.className = 'profile-delete focusable';

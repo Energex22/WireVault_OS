@@ -6,7 +6,7 @@
   <title>WireVault OS 4.0 Foundation</title>
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/layout.css?v=1.5.0">
+  <link rel="stylesheet" href="css/layout.css?v=1.5.1">
   <link rel="stylesheet" href="css/components.css?v=1.4.0">
   <link rel="stylesheet" href="css/views.css?v=1.3.0">
   <link rel="stylesheet" href="css/animations.css">
@@ -235,6 +235,26 @@
 
   <div id="profileList" class="profile-list"></div>
 
+<section id="profileEditor" class="profile-editor">
+  <div class="profile-editor-heading">
+    <div><small>EDIT CURRENT PROFILE</small><strong id="profileEditorTitle">Current Profile</strong></div>
+    <span class="profile-editor-badge">PERSONALIZE</span>
+  </div>
+  <label class="profile-editor-field profile-name-field">
+    <span class="profile-editor-label">Profile name</span>
+    <input id="profileEditorName" class="focusable" type="text" maxlength="20" autocomplete="off" placeholder="Enter profile name">
+  </label>
+  <div class="profile-editor-field">
+    <span class="profile-editor-label">Choose avatar</span>
+    <div id="profileAvatarChoices" class="profile-avatar-choices"></div>
+  </div>
+  <div class="profile-editor-field">
+    <span class="profile-editor-label">Choose accent color</span>
+    <div id="profileAccentChoices" class="profile-accent-choices"></div>
+  </div>
+  <button id="saveProfileChanges" class="primary-button focusable" type="button">Save Profile Changes</button>
+</section>
+
   <form id="createProfileForm" class="create-profile-form">
     <label>
       <small>NEW PROFILE</small>
@@ -259,7 +279,7 @@
 
   <script type="module" src="js/app.js?v=1.4.0"></script>
   <script type="module" src="js/animation-runtime.js"></script>
-  <script type="module" src="js/profile-manager.js?v=1.5.0"></script>
+  <script type="module" src="js/profile-manager.js?v=1.5.1"></script>
   <script type="module" src="js/vault-search.js?v=1.2.0"></script>
 </body>
 </html>

@@ -23,7 +23,7 @@ const formatUptime = seconds => {
 
 export function createHomeView({ store, bus, coreApi, library, router }) {
   const wrapper = el('div',{
-    'data-wirevault-home-version':'1.3.0'
+    'data-wirevault-home-version':'1.4.0'
   });
 
 const layoutKey = 'wirevault.home.layout.v1';
@@ -34,7 +34,7 @@ let editMode = false;
 
 function loadLayout() {
   try {
-    const saved = JSON.parse(localStorage.getItem(layoutKey) || '{}');
+    const saved = JSON.parse(localStorage.getItem(layoutKey()) || '{}');
     return {
       order:Array.isArray(saved.order) ? saved.order : [...defaultOrder],
       hidden:Array.isArray(saved.hidden) ? saved.hidden : [],
@@ -46,7 +46,7 @@ function loadLayout() {
 }
 
 function saveLayout(layout) {
-  localStorage.setItem(layoutKey, JSON.stringify(layout));
+  localStorage.setItem(layoutKey(), JSON.stringify(layout));
 }
 
 function normalizeLayout(layout) {
@@ -417,7 +417,7 @@ function systemHealthCard({ system, memory, storage }) {
             type:'button',
             className:'secondary-button focusable',
             onclick:() => {
-              localStorage.removeItem(layoutKey);
+              localStorage.removeItem(layoutKey());
               render();
             }
           },'Restore Default')
@@ -471,6 +471,11 @@ function systemHealthCard({ system, memory, storage }) {
       activityPanel
     );
   }
+
+  window.addEventListener('wirevault:profile-changed',() => {
+    editMode = false;
+    render();
+  });
 
   bus.on('library:refreshed',render);
   bus.on('core:online',refreshDashboard);

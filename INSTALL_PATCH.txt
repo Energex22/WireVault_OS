@@ -1,18 +1,21 @@
-WireVault Alpha 1.3 — Home Layout Editor Prototype
+WireVault Alpha 1.4 — User Profiles Foundation
 
-Required baseline: Alpha 1.2.3
+Required baseline: Alpha 1.3 Home Layout Editor
 
-Close Core and browser tabs, copy all patch files into the repository root,
-replace files, restart Core, and open WireVault in a new tab.
+1. Close WireVault Core and all browser tabs.
+2. Copy all patch contents into your repository root.
+3. Replace the existing files.
+4. Restart WireVault Core.
+5. Open WireVault in a new browser tab.
 
 Added:
-- Removed the Open Control Center text.
-- Edit Home button.
-- Move widgets left or right.
-- Toggle standard or wide size.
-- Hide and restore widgets.
-- Restore the default layout.
-- Saves the layout in local browser storage.
+- Profile button in the top status area.
+- Profile switcher panel.
+- Create and delete local profiles.
+- Separate Home widget layouts per profile.
+- Active profile is remembered.
+
+Profiles are local-browser only in this foundation release. A later backend update can synchronize them between devices.
 
 Commit message:
-Add Home layout editor prototype
+Add local user profile foundation

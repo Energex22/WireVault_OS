@@ -1,35 +1,20 @@
-# WireVault Alpha 1.2 — Vault Search Prototype
+# WireVault Alpha 1.4 — User Profiles Foundation
 
-## Design
+## Added
 
-- Slides upward from the bottom.
-- Leaves the top WireVault menu visible.
-- Slightly darkens and blurs only the content below the top bar.
-- Does not replace any existing navigation.
+- Profile button in the persistent top bar
+- Slide-out profile switcher
+- Create additional profiles
+- Delete inactive profiles
+- Remember active profile
+- Independent Home widget arrangements for each profile
 
-## Searches
+## Current scope
 
-- Main WireVault pages
-- Common settings destinations
-- Indexed music
-- Indexed games
-- Indexed pictures
-- Indexed videos
-- Manual media-scan action
-
-## Empty state
-
-When no text is entered, Vault Search shows recent and commonly used
-destinations.
-
-## Controls
-
-- `Ctrl + Space`: open or close
-- Arrow keys: move
-- Enter: select
-- Escape: close
-- Hold controller Start: prototype controller opening gesture
+Profiles are stored in the browser for this foundation release. They are not
+password protected and do not yet synchronize between a Windows development
+machine and Raspberry Pi.
 
 ## Commit
 
-`Add bottom drawer Vault Search prototype`
+`Add local user profile foundation`

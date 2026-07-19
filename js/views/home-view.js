@@ -54,6 +54,87 @@ export function createHomeView({ store, bus, coreApi, library, router }) {
     return card;
   }
 
+
+function systemHealthCard({ system, memory, storage }) {
+  const load = system.load_average || {};
+  const online = coreApi.online;
+
+  const metric = (label, value, detail = '') =>
+    el('div',{className:'system-health-metric'},[
+      el('small',{text:label}),
+      el('strong',{text:value}),
+      detail ? el('span',{text:detail}) : null
+    ].filter(Boolean));
+
+  const card = el('button',{
+    className:'dashboard-widget system-health-card focusable',
+    type:'button',
+    onclick:() => document.getElementById('controlCenterButton')?.click()
+  },[
+    el('div',{className:'system-health-header'},[
+      el('div',{className:'widget-heading'},[
+        wvIcon('system','widget-icon'),
+        el('div',{},[
+          el('strong',{text:'Raspberry Pi System'}),
+          el('small',{
+            text:online
+              ? `${system.hostname || 'WireVault'} · ${formatUptime(system.uptime_seconds)} uptime`
+              : 'WireVault Core is not connected'
+          })
+        ])
+      ]),
+      el('span',{
+        className:`system-health-state ${online ? 'online' : 'offline'}`,
+        text:online ? 'HEALTHY' : 'PREVIEW'
+      })
+    ]),
+    el('div',{className:'system-health-grid'},[
+      metric(
+        'Temperature',
+        Number.isFinite(system.cpu_temperature_c)
+          ? `${system.cpu_temperature_c}°C`
+          : '—',
+        'CPU'
+      ),
+      metric(
+        'CPU Load',
+        Number.isFinite(load.one) ? String(load.one) : '—',
+        '1 minute'
+      ),
+      metric(
+        'Memory',
+        Number.isFinite(memory.percent) ? `${memory.percent}%` : '—',
+        Number.isFinite(memory.used_bytes)
+          ? `${formatBytes(memory.used_bytes)} used`
+          : ''
+      ),
+      metric(
+        'Storage',
+        Number.isFinite(storage.percent) ? `${storage.percent}%` : '—',
+        Number.isFinite(storage.free_bytes)
+          ? `${formatBytes(storage.free_bytes)} free`
+          : ''
+      ),
+      metric(
+        'Architecture',
+        system.machine || '—',
+        system.python ? `Python ${system.python}` : ''
+      ),
+      metric(
+        'Core',
+        online ? 'Online' : 'Offline',
+        online ? 'APIs connected' : 'Start Core'
+      )
+    ]),
+    el('small',{
+      className:'system-health-open',
+      text:'Open Control Center for full system details'
+    })
+  ]);
+
+  return card;
+}
+
   function render() {
     const counts = library.getCounts();
     const scan = library.getScanStatus();
@@ -89,38 +170,7 @@ export function createHomeView({ store, bus, coreApi, library, router }) {
     ]);
 
     const widgets = el('div',{className:'dashboard-widget-grid'},[
-      widget({
-        title:'System Health',
-        icon:'system',
-        value:coreApi.online ? 'Healthy' : 'Preview',
-        detail:coreApi.online
-          ? `${system.hostname || 'WireVault'} · ${formatUptime(system.uptime_seconds)} uptime`
-          : 'Backend is not currently connected'
-      }),
-      widget({
-        title:'CPU Temperature',
-        icon:'cpu',
-        value:Number.isFinite(system.cpu_temperature_c)
-          ? `${system.cpu_temperature_c}°C`
-          : '—',
-        detail:'Raspberry Pi thermal reading'
-      }),
-      widget({
-        title:'Memory',
-        icon:'ram',
-        value:Number.isFinite(memory.percent) ? `${memory.percent}%` : '—',
-        detail:Number.isFinite(memory.used_bytes)
-          ? `${formatBytes(memory.used_bytes)} used`
-          : 'Live with WireVault Core'
-      }),
-      widget({
-        title:'Storage',
-        icon:'storage',
-        value:Number.isFinite(storage.percent) ? `${storage.percent}%` : '—',
-        detail:Number.isFinite(storage.free_bytes)
-          ? `${formatBytes(storage.free_bytes)} free`
-          : 'Live with WireVault Core'
-      }),
+      systemHealthCard({ system, memory, storage }),
       widget({
         title:'Music',
         icon:'music',

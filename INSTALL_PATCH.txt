@@ -1,14 +1,15 @@
-WireVault Alpha 0.9.5 — Dock and Widget Cleanup
+WireVault Alpha 0.9.6 — Raspberry Pi System Health
 
-Required baseline: Alpha 0.9.4
+Required baseline: Alpha 0.9.5
 
-Copy all patch contents into your WireVault_OS repository root and replace files.
-Restart WireVault Core and press Ctrl+F5.
+1. Copy all patch contents into your WireVault_OS repository root.
+2. Replace the existing files.
+3. Restart WireVault Core.
+4. Press Ctrl+F5.
 
-Changes:
-- Removes the duplicate page title above the selected dock icon.
-- Keeps the page name beneath the highlighted icon.
-- Makes System Health the same size as the other Home widgets.
+The large Home card now contains the Pi system information that justifies its two-column size. The individual CPU Temperature, Memory, and Storage cards were removed to avoid duplicate information.
+
+Click the System card to open Control Center, where the same information is shown in a compact persistent system panel.
 
 Commit message:
-Clean up dock labels and widget sizing
+Add Raspberry Pi system health panels

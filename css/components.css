@@ -306,3 +306,58 @@
 .mini-player-play{width:44px;height:44px;border-color:var(--wv-green);background:var(--wv-green);color:#041005}.mini-player-close{color:#ff9a8c}
 .music-track-play{width:48px;height:48px;display:grid;place-items:center;border:1px solid var(--wv-green);border-radius:50%;background:#071008;color:var(--wv-green);font-size:20px!important;transition:.16s}
 .music-track-card:hover .music-track-play{transform:scale(1.08);background:var(--wv-green);color:#041005}
+
+
+/* Alpha 0.9.6 Control Center system details */
+.control-system-card{
+  display:block;
+}
+.control-system-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.control-system-heading>strong{
+  color:var(--wv-green);
+}
+.control-system-card.system-offline .control-system-heading>strong{
+  color:#ffd166;
+}
+.control-system-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:12px;
+}
+.control-system-grid>div{
+  min-width:0;
+  padding:8px;
+  border:1px solid rgba(120,255,22,.16);
+  border-radius:9px;
+  background:rgba(2,8,4,.58);
+}
+.control-system-grid small,
+.control-system-grid strong{
+  display:block;
+}
+.control-system-grid small{
+  color:var(--wv-muted);
+  font-size:9px;
+}
+.control-system-grid strong{
+  margin-top:4px;
+  overflow:hidden;
+  color:#fff;
+  font-size:12px;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.control-system-platform{
+  display:block;
+  margin-top:10px;
+  overflow:hidden;
+  color:var(--wv-muted);
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}

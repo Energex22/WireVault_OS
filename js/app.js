@@ -240,6 +240,84 @@ bus.on('core:library.scan.complete',async event=>{
   toast('Media scan complete');
 });
 
+
+function formatSystemBytes(bytes) {
+  if (!Number.isFinite(bytes) || bytes <= 0) return '—';
+  const units = ['B','KB','MB','GB','TB'];
+  const index = Math.min(
+    Math.floor(Math.log(bytes) / Math.log(1024)),
+    units.length - 1
+  );
+  return `${(bytes / (1024 ** index)).toFixed(index ? 1 : 0)} ${units[index]}`;
+}
+
+function formatSystemUptime(seconds) {
+  if (!Number.isFinite(seconds)) return '—';
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor((seconds % 86400) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  if (days) return `${days}d ${hours}h`;
+  if (hours) return `${hours}h ${minutes}m`;
+  return `${minutes}m`;
+}
+
+function updateControlSystemCard() {
+  const system = store.get('core.system') || {};
+  const memory = system.memory || {};
+  const storage = system.storage || {};
+  const load = system.load_average || {};
+  const online = coreApi.online;
+
+  const setText = (id, value) => {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value;
+  };
+
+  setText('controlSystemState', online ? 'Healthy' : 'Preview');
+  setText('controlSystemHostname', system.hostname || 'WireVault');
+  setText(
+    'controlSystemTemperature',
+    Number.isFinite(system.cpu_temperature_c)
+      ? `${system.cpu_temperature_c}°C`
+      : '—'
+  );
+  setText(
+    'controlSystemLoad',
+    Number.isFinite(load.one) ? String(load.one) : '—'
+  );
+  setText(
+    'controlSystemMemory',
+    Number.isFinite(memory.percent)
+      ? `${memory.percent}% · ${formatSystemBytes(memory.used_bytes)}`
+      : '—'
+  );
+  setText(
+    'controlSystemStorage',
+    Number.isFinite(storage.percent)
+      ? `${storage.percent}% · ${formatSystemBytes(storage.free_bytes)} free`
+      : '—'
+  );
+  setText('controlSystemUptime', formatSystemUptime(system.uptime_seconds));
+  setText(
+    'controlSystemPlatform',
+    system.platform ||
+      (online
+        ? 'WireVault Core connected'
+        : 'Start WireVault Core for live Raspberry Pi details')
+  );
+
+  document
+    .querySelector('.control-system-card')
+    ?.classList.toggle('system-offline', !online);
+}
+
+bus.on('state:changed', change => {
+  if (change.path === 'core.system') updateControlSystemCard();
+});
+bus.on('core:online', updateControlSystemCard);
+bus.on('core:offline', updateControlSystemCard);
+updateControlSystemCard();
+
 window.WireVault = {bus,store,router,settings,registry,clock,library,coreApi,musicPlayer,toast};
 /* Alpha 0.4 animated console dock */
 (function wireVaultAnimatedDock() {

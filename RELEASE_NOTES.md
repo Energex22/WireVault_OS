@@ -1,26 +1,33 @@
-# WireVault Alpha 0.9.4
+# WireVault Alpha 0.9.6
 
-## Fixed
+## Home
 
-- Removed the remaining single flash when switching pages.
-- Removed repeated automatic media scans.
-- Removed routine scan-complete notification spam.
+The large System Health widget is now a real all-in-one Raspberry Pi card:
 
-## New scan behavior
+- Core state
+- Hostname
+- Uptime
+- CPU temperature
+- One-minute CPU load
+- Memory usage
+- Storage usage and free space
+- Architecture
+- Python version
 
-- One scan when WireVault Core starts.
-- Manual scans through **Files → Scan**.
-- Scan failures remain eligible for notifications.
-- Successful scans update status and activity without filling Notification Center.
+The separate Temperature, Memory, and Storage cards were removed to avoid
+duplicating the same information.
 
-## Animations retained
+## Control Center
 
-- Boot animation
-- Dock selection
-- Card hover and controller focus
-- Control Center and Notification Center
-- Toasts and scan spinner
+Added a compact Raspberry Pi system panel with the same live information.
+
+Clicking the Home system card opens Control Center.
+
+## Future layout editing
+
+The system card remains a two-column widget and is structured so a later
+per-user Home editor can move, resize, hide, or restore it.
 
 ## Commit
 
-`Stop automatic scan spam and remove route flash`
+`Add Raspberry Pi system health panels`

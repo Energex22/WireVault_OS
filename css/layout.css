@@ -17,7 +17,7 @@
 .top-weather{display:flex;align-items:center;gap:11px}.top-weather>span{font-size:40px}.top-weather strong,.top-weather small{display:block}.top-weather small{color:var(--wv-muted)}
 .status-item{text-align:center}.status-item span,.status-item small{display:block}.status-item span{font-size:26px;color:var(--wv-green)}.status-item small{font-size:10px;color:var(--wv-muted)}
 .app-shell{position:relative;z-index:2;padding:138px 20px 24px}
-.main-dock{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:18px}
+
 .app-view{min-height:calc(100vh - 210px)}
 .control-center{
   position:fixed;top:0;right:0;z-index:100;width:min(480px,94vw);height:100%;
@@ -35,4 +35,65 @@
 @media(max-width:1000px){
   .topbar{height:auto;grid-template-columns:1fr;position:relative}.topbar>section{clip-path:none;min-height:80px}
   .app-shell{padding-top:20px}.main-dock{grid-template-columns:repeat(3,1fr)}
+}
+/* Alpha 0.4 animated Xbox-style dock */
+.dock-shell{
+  position:relative;
+  display:grid;
+  grid-template-columns:48px minmax(0,1fr) 48px;
+  align-items:center;
+  gap:10px;
+  margin-bottom:20px;
+  padding:10px;
+  border:1px solid rgba(120,255,22,.24);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(120,255,22,.08),transparent 45%),
+    linear-gradient(180deg,rgba(7,17,9,.94),rgba(2,6,3,.97));
+  box-shadow:0 14px 30px rgba(0,0,0,.28);
+  overflow:hidden;
+}
+.dock-center{
+  min-width:0;
+}
+.active-route-title{
+  height:24px;
+  margin-bottom:5px;
+  color:var(--wv-green);
+  text-align:center;
+  font-size:12px;
+  font-weight:1000;
+  letter-spacing:5px;
+  text-shadow:0 0 10px rgba(120,255,22,.38);
+  transition:opacity 160ms ease,transform 160ms ease;
+}
+.main-dock{
+  display:flex;
+  align-items:flex-end;
+  gap:10px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  padding:8px 8px 12px;
+  scroll-snap-type:x proximity;
+  scrollbar-width:none;
+}
+.main-dock::-webkit-scrollbar{display:none}
+.dock-scroll-button{
+  width:44px;
+  height:64px;
+  border:1px solid var(--wv-green-dim);
+  border-radius:12px;
+  background:#071008;
+  color:var(--wv-green);
+  font-size:38px;
+  line-height:1;
+  transition:transform 160ms ease,background 160ms ease;
+}
+.dock-scroll-button:hover{
+  background:var(--wv-green);
+  color:#041005;
+  transform:scale(1.05);
+}
+@media(max-width:1000px){
+  .dock-shell{grid-template-columns:42px minmax(0,1fr) 42px}
 }

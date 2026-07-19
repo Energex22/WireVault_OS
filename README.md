@@ -1,32 +1,37 @@
-# WireVault OS 4.0 — Core Milestone 2.1
+# WireVault OS 4.0 — Alpha 0.5 Dynamic Backgrounds
 
-This revision changes Home from a duplicate shortcut page into a live widget
-dashboard.
+This update adds section-aware visual atmosphere without changing navigation or
+backend behavior.
 
-## Home no longer duplicates navigation
+## Added
 
-The main dock at the top remains the only section launcher.
+- Animated hex-grid base background
+- Slow drifting particles
+- Route-aware ambient lighting
+- Smooth background transition when changing sections
+- Home glow field
+- Streaming theater lighting
+- Games arcade grid
+- Music pulse-wave atmosphere
+- Pictures blurred gallery lighting
+- Files blueprint grid
+- Browser network rings
+- Settings technical glow
+- Reduced-motion support
 
-Home now displays:
+## Glass console surfaces
 
-- WireVault Core connection status
-- System health
-- CPU temperature
-- RAM usage
-- Storage usage
-- Indexed Music count
-- Indexed Picture count
-- Indexed Game/ROM count
-- Indexed Video count
-- Media scanner state
-- Last scan time
-- Weather placeholder
-- Recent Core activity
-- Refresh Widgets button
+Cards, widgets, settings rows, library items, and panels now use:
 
-The Music, Pictures, Games, and Videos count widgets can open their related
-sections, but they are presented as live status widgets rather than duplicate
-navigation shortcuts.
+- translucent dark graphite backgrounds
+- frosted blur
+- neon-green edges
+- subtle inner highlights
+- softer depth shadows
+
+## Git commit suggestion
+
+    Add dynamic section backgrounds and glass UI
 
 ## Start
 

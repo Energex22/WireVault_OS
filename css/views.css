@@ -277,3 +277,14 @@
   .dashboard-status-strip{grid-template-columns:14px 1fr}
   .dashboard-status-strip small{grid-column:2}
 }
+
+.widget-heading .wv-icon{flex:0 0 auto}
+.route-placeholder .route-icon{display:none}
+
+.app-view>*, .app-view>.view-root{
+  animation:viewEnter 300ms cubic-bezier(.2,.8,.2,1);
+}
+@keyframes viewEnter{
+  from{opacity:0;transform:translateY(12px) scale(.992)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}

@@ -1,4 +1,5 @@
 import { el } from '../components/el.js';
+import { wvIcon } from '../components/wv-icon.js';
 
 const formatBytes = bytes => {
   if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
@@ -44,7 +45,7 @@ export function createHomeView({ store, bus, coreApi, library, router }) {
       ...(action ? { type:'button', onclick:action } : {})
     },[
       el('div',{className:'widget-heading'},[
-        el('span',{text:icon}),
+        wvIcon(icon,'widget-icon'),
         el('strong',{text:title})
       ]),
       el('div',{className:'widget-value',text:String(value)}),
@@ -90,7 +91,7 @@ export function createHomeView({ store, bus, coreApi, library, router }) {
     const widgets = el('div',{className:'dashboard-widget-grid'},[
       widget({
         title:'System Health',
-        icon:'♥',
+        icon:'system',
         value:coreApi.online ? 'Healthy' : 'Preview',
         detail:coreApi.online
           ? `${system.hostname || 'WireVault'} · ${formatUptime(system.uptime_seconds)} uptime`
@@ -99,7 +100,7 @@ export function createHomeView({ store, bus, coreApi, library, router }) {
       }),
       widget({
         title:'CPU Temperature',
-        icon:'🌡️',
+        icon:'cpu',
         value:Number.isFinite(system.cpu_temperature_c)
           ? `${system.cpu_temperature_c}°C`
           : '—',
@@ -107,7 +108,7 @@ export function createHomeView({ store, bus, coreApi, library, router }) {
       }),
       widget({
         title:'Memory',
-        icon:'🧠',
+        icon:'ram',
         value:Number.isFinite(memory.percent) ? `${memory.percent}%` : '—',
         detail:Number.isFinite(memory.used_bytes)
           ? `${formatBytes(memory.used_bytes)} used`
@@ -115,7 +116,7 @@ export function createHomeView({ store, bus, coreApi, library, router }) {
       }),
       widget({
         title:'Storage',
-        icon:'💾',
+        icon:'storage',
         value:Number.isFinite(storage.percent) ? `${storage.percent}%` : '—',
         detail:Number.isFinite(storage.free_bytes)
           ? `${formatBytes(storage.free_bytes)} free`
@@ -123,35 +124,35 @@ export function createHomeView({ store, bus, coreApi, library, router }) {
       }),
       widget({
         title:'Music',
-        icon:'🎵',
+        icon:'music',
         value:counts.music || 0,
         detail:'Indexed tracks',
         action:() => router.open('music')
       }),
       widget({
         title:'Pictures',
-        icon:'🖼️',
+        icon:'pictures',
         value:counts.pictures || 0,
         detail:'Indexed images',
         action:() => router.open('pictures')
       }),
       widget({
         title:'Games',
-        icon:'🎮',
+        icon:'games',
         value:counts.games || 0,
         detail:'Indexed ROMs',
         action:() => router.open('games')
       }),
       widget({
         title:'Videos',
-        icon:'🎬',
+        icon:'streaming',
         value:counts.videos || 0,
         detail:'Indexed videos',
         action:() => router.open('files')
       }),
       widget({
         title:'Media Scanner',
-        icon:'↻',
+        icon:'scanner',
         value:scan.running ? 'Scanning' : 'Idle',
         detail:scan.finished_at
           ? `Last scan ${new Date(scan.finished_at * 1000).toLocaleString()}`
@@ -160,7 +161,7 @@ export function createHomeView({ store, bus, coreApi, library, router }) {
       }),
       widget({
         title:'Weather',
-        icon:'⛅',
+        icon:'weather',
         value:'72°F',
         detail:'Weather service will replace this placeholder'
       })

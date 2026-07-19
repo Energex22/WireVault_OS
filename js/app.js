@@ -7,6 +7,7 @@ import { ClockService } from './services/clock-service.js';
 import { LibraryService } from './services/library-service.js';
 import { CoreApiService } from './services/core-api-service.js';
 import { createHomeView } from './views/home-view.js';
+import { wvIcon } from './components/wv-icon.js';
 import { createPlaceholderView } from './views/placeholder-view.js';
 import { createFilesView } from './views/files-view.js';
 import { createMusicView } from './views/music-view.js';
@@ -44,12 +45,12 @@ let router;
 
 const routes = {
   home:{render:()=>createHomeView({store,bus,coreApi,library,router})},
-  streaming:{render:()=>createPlaceholderView({icon:'📺',title:'Streaming',description:'This will be the first legacy section ported into the modular router.'})},
+  streaming:{render:()=>createPlaceholderView({icon:'streaming',title:'Streaming',description:'This will be the first legacy section ported into the modular router.'})},
   games:{render:()=>createGamesView({library,router,coreApi})},
   music:{render:()=>createMusicView({library,router,coreApi})},
   pictures:{render:()=>createPicturesView({library,router,coreApi})},
   files:{render:()=>createFilesView({library,coreApi,toast})},
-  browser:{render:()=>createPlaceholderView({icon:'🌐',title:'Browser',description:'Bookmarks and launcher actions will be isolated from the dashboard.'})},
+  browser:{render:()=>createPlaceholderView({icon:'browser',title:'Browser',description:'Bookmarks and launcher actions will be isolated from the dashboard.'})},
   settings:{render:()=>createSettingsView({settings,registry,store,toast})},
 };
 
@@ -89,18 +90,25 @@ const coreApi = new CoreApiService({bus});
 const library = new LibraryService({store,bus,coreApi});
 
 const dockRoutes = [
-  ['home','⌂','Home'],['streaming','📺','Streaming'],['games','🎮','Games'],
-  ['music','🎵','Music'],['pictures','🖼️','Pictures'],['files','📁','Files'],
-  ['settings','⚙️','Settings']
+  ['home','home','Home'],
+  ['streaming','streaming','Streaming'],
+  ['games','games','Games'],
+  ['music','music','Music'],
+  ['pictures','pictures','Pictures'],
+  ['files','files','Files'],
+  ['settings','settings','Settings']
 ];
 
 const dock = document.getElementById('mainDock');
-dockRoutes.forEach(([route,icon,label])=>{
+dockRoutes.forEach(([route,iconName,label])=>{
   const button=document.createElement('button');
   button.className='dock-button focusable';
   button.type='button';
   button.dataset.route=route;
-  button.innerHTML=`<span>${icon}</span><small>${label}</small>`;
+  button.append(
+    wvIcon(iconName,'dock-icon'),
+    Object.assign(document.createElement('small'),{textContent:label})
+  );
   button.addEventListener('click',()=>router.open(route));
   dock.append(button);
 });
@@ -124,6 +132,27 @@ bus.on('clock:tick',date=>{
 
 bus.on('route:changed',({route})=>{
   document.getElementById('currentRouteLabel').textContent=route;
+
+  document.body.dataset.route = route;
+  document.body.classList.add('route-transitioning');
+  clearTimeout(window.__wireVaultRouteTransitionTimer);
+  window.__wireVaultRouteTransitionTimer = setTimeout(() => {
+    document.body.classList.remove('route-transitioning');
+  }, 420);
+
+  const title = document.getElementById('activeRouteTitle');
+  if (title) title.textContent = route.toUpperCase();
+
+  document.querySelectorAll('.dock-button').forEach(button => {
+    const active = button.dataset.route === route;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-current', active ? 'page' : 'false');
+  });
+
+  requestAnimationFrame(() => {
+    document.querySelector(`.dock-button[data-route="${route}"]`)
+      ?.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+  });
 });
 
 bus.on('settings:saved',()=>toast('Settings saved'));
@@ -206,3 +235,62 @@ bus.on('core:library.scan.complete',async event=>{
 });
 
 window.WireVault = {bus,store,router,settings,registry,clock,library,coreApi,toast};
+/* Alpha 0.4 animated console dock */
+(function wireVaultAnimatedDock() {
+  const dock = document.getElementById('mainDock');
+  const left = document.getElementById('dockScrollLeft');
+  const right = document.getElementById('dockScrollRight');
+
+  function dockButtons() {
+    return [...dock.querySelectorAll('.dock-button')];
+  }
+
+  function currentIndex() {
+    const buttons = dockButtons();
+    const route = window.WireVault?.store?.get('navigation.route') || 'home';
+    return Math.max(0, buttons.findIndex(button => button.dataset.route === route));
+  }
+
+  function openRelative(offset) {
+    const buttons = dockButtons();
+    if (!buttons.length) return;
+
+    const index = (currentIndex() + offset + buttons.length) % buttons.length;
+    buttons[index].click();
+    buttons[index].focus({ preventScroll:true });
+  }
+
+  left?.addEventListener('click', () => openRelative(-1));
+  right?.addEventListener('click', () => openRelative(1));
+
+  /*
+    Keyboard equivalents for future controller shoulder buttons:
+    Q / PageUp = previous section
+    E / PageDown = next section
+  */
+  window.addEventListener('keydown', event => {
+    if (event.target.matches('input,textarea,select')) return;
+
+    if (event.key === 'PageUp' || event.key.toLowerCase() === 'q') {
+      event.preventDefault();
+      openRelative(-1);
+    }
+
+    if (event.key === 'PageDown' || event.key.toLowerCase() === 'e') {
+      event.preventDefault();
+      openRelative(1);
+    }
+  });
+
+  dock?.addEventListener('wheel', event => {
+    if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+      event.preventDefault();
+      dock.scrollBy({ left:event.deltaY, behavior:'smooth' });
+    }
+  }, { passive:false });
+
+  window.WireVaultAnimatedDock = {
+    previous:() => openRelative(-1),
+    next:() => openRelative(1)
+  };
+})();

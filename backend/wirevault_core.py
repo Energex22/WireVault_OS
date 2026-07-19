@@ -29,20 +29,37 @@ def choose_folder_native(title: str = "Select Folder", initial: str = "") -> str
     initial_path = str(Path(initial).expanduser()) if initial else str(Path.home())
 
     if sys.platform.startswith("win"):
+        # Create an invisible topmost owner window so FolderBrowserDialog
+        # opens in front of Chromium instead of behind it.
         ps_script = (
             "Add-Type -AssemblyName System.Windows.Forms;"
-            "$d=New-Object System.Windows.Forms.FolderBrowserDialog;"
-            "$d.Description=$env:WV_PICKER_TITLE;"
-            "$d.SelectedPath=$env:WV_PICKER_INITIAL;"
-            "$d.ShowNewFolderButton=$true;"
-            "$r=$d.ShowDialog();"
-            "if($r -eq [System.Windows.Forms.DialogResult]::OK){"
+            "Add-Type -AssemblyName System.Drawing;"
+            "$owner=New-Object System.Windows.Forms.Form;"
+            "$owner.StartPosition='CenterScreen';"
+            "$owner.Size=New-Object System.Drawing.Size(1,1);"
+            "$owner.ShowInTaskbar=$false;"
+            "$owner.FormBorderStyle='FixedToolWindow';"
+            "$owner.TopMost=$true;"
+            "$owner.Opacity=0;"
+            "$owner.Show();"
+            "$owner.Activate();"
+            "$dialog=New-Object System.Windows.Forms.FolderBrowserDialog;"
+            "$dialog.Description=$env:WV_PICKER_TITLE;"
+            "$dialog.SelectedPath=$env:WV_PICKER_INITIAL;"
+            "$dialog.ShowNewFolderButton=$true;"
+            "$result=$dialog.ShowDialog($owner);"
+            "if($result -eq [System.Windows.Forms.DialogResult]::OK){"
             "[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
-            "Write-Output $d.SelectedPath}"
+            "Write-Output $dialog.SelectedPath;"
+            "}"
+            "$owner.Close();"
+            "$owner.Dispose();"
         )
+
         environment = os.environ.copy()
         environment["WV_PICKER_TITLE"] = title
         environment["WV_PICKER_INITIAL"] = initial_path
+
         try:
             result = subprocess.run(
                 ["powershell", "-NoProfile", "-STA", "-Command", ps_script],
@@ -50,19 +67,45 @@ def choose_folder_native(title: str = "Select Folder", initial: str = "") -> str
                 text=True,
                 env=environment,
                 timeout=300,
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
             )
+
+            if result.returncode != 0:
+                logging.error(
+                    "Windows folder picker failed: %s",
+                    result.stderr.strip(),
+                )
+                return None
+
             selected = result.stdout.strip()
+            selected = selected.lstrip("\ufeffï»¿").strip()
             return selected or None
-        except (OSError, subprocess.SubprocessError):
+        except subprocess.TimeoutExpired:
+            logging.error("Windows folder picker timed out")
+            return None
+        except OSError:
+            logging.exception("Windows folder picker could not start")
             return None
 
     commands = [
-        ["zenity", "--file-selection", "--directory", f"--title={title}", f"--filename={initial_path}/"],
+        [
+            "zenity",
+            "--file-selection",
+            "--directory",
+            f"--title={title}",
+            f"--filename={initial_path}/",
+        ],
         ["kdialog", "--getexistingdirectory", initial_path, "--title", title],
     ]
+
     for command in commands:
         try:
-            result = subprocess.run(command, capture_output=True, text=True, timeout=300)
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                timeout=300,
+            )
             selected = result.stdout.strip()
             if result.returncode == 0 and selected:
                 return selected
@@ -72,19 +115,22 @@ def choose_folder_native(title: str = "Select Folder", initial: str = "") -> str
     try:
         import tkinter as tk
         from tkinter import filedialog
+
         root = tk.Tk()
         root.withdraw()
         root.attributes("-topmost", True)
+        root.update()
         selected = filedialog.askdirectory(
             title=title,
             initialdir=initial_path,
             mustexist=False,
+            parent=root,
         )
         root.destroy()
         return selected or None
     except Exception:
+        logging.exception("No supported folder picker is available")
         return None
-
 
 def open_folder_native(path_value: str) -> bool:
     folder = Path(path_value).expanduser()
@@ -323,31 +369,87 @@ class WireVaultHandler(SimpleHTTPRequestHandler):
             self.send_json(self.core.settings)
             return
 
-        if parsed.path == "/api/folder-picker":
-            payload = self.read_json()
-            media_type = str(payload.get("media_type", "")).strip()
-            title = str(payload.get("title", "Select WireVault Folder")).strip()
-            initial = str(payload.get("initial", "")).strip()
-            selected = choose_folder_native(title=title, initial=initial)
 
-            if not selected:
-                self.send_json({"cancelled": True, "path": None})
+        if parsed.path == "/api/folder-picker":
+            try:
+                payload = self.read_json()
+                media_type = str(payload.get("media_type", "")).strip()
+                title = str(
+                    payload.get("title", "Select WireVault Folder")
+                ).strip()
+                initial = str(payload.get("initial", "")).strip()
+
+                selected = choose_folder_native(
+                    title=title,
+                    initial=initial,
+                )
+
+                if selected:
+                    selected = str(selected).lstrip("\ufeffï»¿").strip()
+
+                if not selected:
+                    self.send_json({
+                        "cancelled": True,
+                        "path": None,
+                    })
+                    return
+
+                resolved_path = Path(selected).expanduser().resolve()
+                if not resolved_path.exists():
+                    resolved_path.mkdir(parents=True, exist_ok=True)
+
+                if not resolved_path.is_dir():
+                    self.send_json({
+                        "error": "The selected location is not a folder."
+                    }, 400)
+                    return
+
+                resolved = str(resolved_path)
+
+                if media_type:
+                    folders = self.core.settings.setdefault(
+                        "media_folders",
+                        {},
+                    )
+                    folders[media_type] = resolved
+                    save_settings(
+                        self.core.paths.settings,
+                        self.core.settings,
+                    )
+
+                response_settings = json.loads(
+                    json.dumps(self.core.settings)
+                )
+
+                # Return the selected path before publishing secondary events.
+                self.send_json({
+                    "cancelled": False,
+                    "media_type": media_type or None,
+                    "path": resolved,
+                    "settings": response_settings,
+                })
+
+                try:
+                    self.core.events.publish(
+                        "settings.updated",
+                        response_settings,
+                    )
+                except Exception:
+                    logging.exception(
+                        "Folder was saved, but settings event failed"
+                    )
                 return
 
-            resolved = str(Path(selected).expanduser().resolve())
-            if media_type:
-                folders = self.core.settings.setdefault("media_folders", {})
-                folders[media_type] = resolved
-                save_settings(self.core.paths.settings, self.core.settings)
-                self.core.events.publish("settings.updated", self.core.settings)
-
-            self.send_json({
-                "cancelled": False,
-                "media_type": media_type or None,
-                "path": resolved,
-                "settings": self.core.settings,
-            })
-            return
+            except Exception as error:
+                logging.exception("Folder picker request failed")
+                try:
+                    self.send_json({
+                        "error": "Folder selection could not be saved.",
+                        "detail": str(error),
+                    }, 500)
+                except (BrokenPipeError, ConnectionResetError):
+                    pass
+                return
 
         if parsed.path == "/api/open-folder":
             payload = self.read_json()

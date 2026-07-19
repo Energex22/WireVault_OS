@@ -1,18 +1,25 @@
-# WireVault OS Alpha 0.6
+# WireVault Alpha 0.9 — Animation Foundation
 
 ## Added
 
-- Notification button in the top status area
-- Unread notification badge
-- Slide-out notification history
-- Live notifications from WireVault Core
-- Automatic library scan completion notifications
-- Info, success, warning, and error styles
-- Relative timestamps
-- Clear View button
-- Escape closes the panel
-- Opening the panel marks displayed notifications as seen
+- Smooth route fade, blur, and slide transitions
+- Staggered page-content entry
+- Sliding controller/keyboard focus halo
+- Card lift and glow
+- Button press feedback
+- Animated dock selection
+- Control Center and Notification Center opening polish
+- Toast pop animation
+- Media scanner spinner
+- Reusable loading shimmer
+- Full reduced-motion support
+
+## Changed files
+
+- `index.html`
+- `css/animations.css`
+- `js/animation-runtime.js`
 
 ## Commit
 
-`Add live notification center`
+`Add console animation foundation`

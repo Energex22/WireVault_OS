@@ -1,8 +1,17 @@
-WireVault Alpha 0.8 Native Library Manager
+WireVault Alpha 0.9 Animation Foundation
 
-Required baseline: Alpha 0.7 Persistent Mini Player
+Required baseline: Alpha 0.8.5
 
-Copy all patch contents into your repository root and replace existing files.
-Run start_core_windows.bat, open Files, click Browse beside Music, choose a folder, then click Scan.
+1. Copy all files from this patch into the root of your WireVault_OS repository.
+2. Replace index.html when prompted.
+3. Start WireVault Core.
+4. Hard-refresh the browser with Ctrl+F5.
+5. Switch between sections and test keyboard/controller focus.
 
-Commit: Add native media folder selector
+Changed files:
+- index.html
+- css/animations.css
+- js/animation-runtime.js
+
+Commit message:
+Add console animation foundation

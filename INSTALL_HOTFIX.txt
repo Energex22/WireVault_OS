@@ -1,13 +1,12 @@
-WireVault Alpha 0.8.2 Folder Selector Hotfix
+WireVault Alpha 0.9.1 Animation Stability Hotfix
 
-Required baseline: Alpha 0.8 or Alpha 0.8.1
+Required baseline: Alpha 0.9 Animation Foundation
 
-1. Close the WireVault Core command window.
-2. Copy the backend folder from this patch into your WireVault_OS repository.
-3. Replace backend/wirevault_core.py.
-4. Run start_core_windows.bat again.
-5. Hard-refresh the browser with Ctrl+F5.
-6. Open Files and press Browse.
+Copy the css and js folders into your WireVault_OS repository and replace:
+- css/animations.css
+- js/animation-runtime.js
+
+Restart WireVault Core and press Ctrl+F5.
 
 Commit message:
-Fix folder picker backend crash
+Fix route flashing and focus halo movement

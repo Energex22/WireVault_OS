@@ -3,7 +3,7 @@
   "port": 8080,
   "scan_interval_seconds": 10,
   "media_folders": {
-    "music": "/home/oai/Media/Music",
+    "music": "C:\\Users\\Gaming\\Music\\add to usb",
     "pictures": "/home/oai/Media/Pictures",
     "games": "/home/oai/Media/Games",
     "videos": "/home/oai/Media/Videos"

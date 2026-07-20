@@ -1,0 +1,547 @@
+from __future__ import annotations
+
+from http import HTTPStatus
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+from threading import Event, Lock, Thread
+from urllib.parse import parse_qs, urlparse, unquote
+from queue import Empty
+import argparse
+import json
+import logging
+import mimetypes
+import os
+import signal
+import time
+import shutil
+import subprocess
+import sys
+
+from config import load_settings, save_settings, project_paths
+from database import Database
+from event_stream import EventStream
+from media_scanner import MediaScanner
+from system_monitor import system_status
+
+
+
+def choose_folder_native(title: str = "Select Folder", initial: str = "") -> str | None:
+    initial_path = str(Path(initial).expanduser()) if initial else str(Path.home())
+
+    if sys.platform.startswith("win"):
+        # Create an invisible topmost owner window so FolderBrowserDialog
+        # opens in front of Chromium instead of behind it.
+        ps_script = (
+            "Add-Type -AssemblyName System.Windows.Forms;"
+            "Add-Type -AssemblyName System.Drawing;"
+            "$owner=New-Object System.Windows.Forms.Form;"
+            "$owner.StartPosition='CenterScreen';"
+            "$owner.Size=New-Object System.Drawing.Size(1,1);"
+            "$owner.ShowInTaskbar=$false;"
+            "$owner.FormBorderStyle='FixedToolWindow';"
+            "$owner.TopMost=$true;"
+            "$owner.Opacity=0;"
+            "$owner.Show();"
+            "$owner.Activate();"
+            "$dialog=New-Object System.Windows.Forms.FolderBrowserDialog;"
+            "$dialog.Description=$env:WV_PICKER_TITLE;"
+            "$dialog.SelectedPath=$env:WV_PICKER_INITIAL;"
+            "$dialog.ShowNewFolderButton=$true;"
+            "$result=$dialog.ShowDialog($owner);"
+            "if($result -eq [System.Windows.Forms.DialogResult]::OK){"
+            "[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
+            "Write-Output $dialog.SelectedPath;"
+            "}"
+            "$owner.Close();"
+            "$owner.Dispose();"
+        )
+
+        environment = os.environ.copy()
+        environment["WV_PICKER_TITLE"] = title
+        environment["WV_PICKER_INITIAL"] = initial_path
+
+        try:
+            result = subprocess.run(
+                ["powershell", "-NoProfile", "-STA", "-Command", ps_script],
+                capture_output=True,
+                text=True,
+                env=environment,
+                timeout=300,
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+            )
+
+            if result.returncode != 0:
+                logging.error(
+                    "Windows folder picker failed: %s",
+                    result.stderr.strip(),
+                )
+                return None
+
+            selected = result.stdout.strip()
+            selected = selected.lstrip("\ufeffï»¿").strip()
+            return selected or None
+        except subprocess.TimeoutExpired:
+            logging.error("Windows folder picker timed out")
+            return None
+        except OSError:
+            logging.exception("Windows folder picker could not start")
+            return None
+
+    commands = [
+        [
+            "zenity",
+            "--file-selection",
+            "--directory",
+            f"--title={title}",
+            f"--filename={initial_path}/",
+        ],
+        ["kdialog", "--getexistingdirectory", initial_path, "--title", title],
+    ]
+
+    for command in commands:
+        try:
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                timeout=300,
+            )
+            selected = result.stdout.strip()
+            if result.returncode == 0 and selected:
+                return selected
+        except (OSError, subprocess.SubprocessError):
+            continue
+
+    try:
+        import tkinter as tk
+        from tkinter import filedialog
+
+        root = tk.Tk()
+        root.withdraw()
+        root.attributes("-topmost", True)
+        root.update()
+        selected = filedialog.askdirectory(
+            title=title,
+            initialdir=initial_path,
+            mustexist=False,
+            parent=root,
+        )
+        root.destroy()
+        return selected or None
+    except Exception:
+        logging.exception("No supported folder picker is available")
+        return None
+
+def open_folder_native(path_value: str) -> bool:
+    folder = Path(path_value).expanduser()
+    if not folder.exists() or not folder.is_dir():
+        return False
+    try:
+        if sys.platform.startswith("win"):
+            os.startfile(str(folder))
+        elif sys.platform == "darwin":
+            subprocess.Popen(["open", str(folder)])
+        else:
+            subprocess.Popen(["xdg-open", str(folder)])
+        return True
+    except OSError:
+        return False
+
+
+class CoreState:
+    def __init__(self, project_root: Path):
+        self.paths = project_paths(project_root)
+        self.settings = load_settings(self.paths.settings)
+        self.database = Database(self.paths.database)
+        self.events = EventStream()
+        self.started_at = time.time()
+        self.stop_event = Event()
+        self.scan_lock = Lock()
+        self.last_scan = {
+            "running": False,
+            "started_at": None,
+            "finished_at": None,
+            "indexed": 0,
+            "removed": 0,
+            "counts": self.database.counts(),
+            "error": None,
+        }
+
+    def scan_library(self) -> dict:
+        if not self.scan_lock.acquire(blocking=False):
+            return self.last_scan
+
+        try:
+            self.last_scan.update({
+                "running": True,
+                "started_at": time.time(),
+                "error": None,
+            })
+            self.events.publish("library.scan.started", {
+                "folders": self.settings["media_folders"]
+            })
+
+            scanner = MediaScanner(self.settings["media_folders"])
+            items, existing_paths = scanner.scan()
+            indexed = self.database.upsert_media(items)
+            removed = self.database.remove_missing_paths(existing_paths)
+            counts = self.database.counts()
+
+            self.last_scan.update({
+                "running": False,
+                "finished_at": time.time(),
+                "indexed": indexed,
+                "removed": removed,
+                "counts": counts,
+            })
+
+            self.database.add_activity(
+                "library.scan",
+                "Media library scanned",
+                f"Indexed {indexed}; removed {removed}",
+                time.time(),
+            )
+            self.events.publish("library.scan.complete", self.last_scan)
+            return self.last_scan
+        except Exception as error:
+            logging.exception("Library scan failed")
+            self.last_scan.update({
+                "running": False,
+                "finished_at": time.time(),
+                "error": str(error),
+            })
+            self.events.publish("library.scan.error", self.last_scan)
+            return self.last_scan
+        finally:
+            self.scan_lock.release()
+
+
+class WireVaultHandler(SimpleHTTPRequestHandler):
+    server_version = "WireVaultCore/1.0"
+
+    @property
+    def core(self) -> CoreState:
+        return self.server.core  # type: ignore[attr-defined]
+
+    def log_message(self, format_string: str, *args) -> None:
+        logging.info("%s - %s", self.address_string(), format_string % args)
+
+    def send_json(self, payload, status: int = 200) -> None:
+        body = json.dumps(payload, indent=2).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def read_json(self) -> dict:
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            raw = self.rfile.read(length) if length else b"{}"
+            value = json.loads(raw.decode("utf-8"))
+            return value if isinstance(value, dict) else {}
+        except (ValueError, json.JSONDecodeError):
+            return {}
+
+    def do_GET(self) -> None:
+        parsed = urlparse(self.path)
+
+        if parsed.path == "/api/health":
+            self.send_json({
+                "ok": True,
+                "service": "wirevault-core",
+                "version": 1,
+                "time": time.time(),
+            })
+            return
+
+        if parsed.path == "/api/system":
+            self.send_json(system_status(self.core.paths.root, self.core.started_at))
+            return
+
+        if parsed.path == "/api/library/counts":
+            self.send_json(self.core.database.counts())
+            return
+
+        if parsed.path == "/api/library/status":
+            self.send_json(self.core.last_scan)
+            return
+
+        if parsed.path == "/api/library":
+            query = parse_qs(parsed.query)
+            media_type = query.get("type", [None])[0]
+            search = query.get("q", [""])[0]
+            self.send_json(self.core.database.media(media_type, search))
+            return
+
+        if parsed.path == "/api/settings":
+            self.send_json(self.core.settings)
+            return
+
+        if parsed.path == "/api/activity":
+            query = parse_qs(parsed.query)
+            limit = int(query.get("limit", ["30"])[0])
+            self.send_json(self.core.database.recent_activity(limit))
+            return
+
+
+        if parsed.path == "/api/notifications":
+            query = parse_qs(parsed.query)
+            limit = int(query.get("limit", ["50"])[0])
+            self.send_json(self.core.database.notifications(limit))
+            return
+
+        if parsed.path == "/api/events":
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "text/event-stream")
+            self.send_header("Cache-Control", "no-cache")
+            self.send_header("Connection", "keep-alive")
+            self.end_headers()
+
+            queue = self.core.events.subscribe()
+            try:
+                self.wfile.write(b": connected\n\n")
+                self.wfile.flush()
+                while not self.core.stop_event.is_set():
+                    try:
+                        event = queue.get(timeout=15)
+                        self.wfile.write(self.core.events.encode(event))
+                    except Empty:
+                        self.wfile.write(b": keepalive\n\n")
+                    self.wfile.flush()
+            except (BrokenPipeError, ConnectionResetError):
+                pass
+            finally:
+                self.core.events.unsubscribe(queue)
+            return
+
+
+        if parsed.path == "/api/media/file":
+            query = parse_qs(parsed.query)
+            requested = unquote(query.get("path", [""])[0])
+            if not requested:
+                self.send_json({"error": "path is required"}, 400)
+                return
+            try:
+                resolved = Path(requested).expanduser().resolve(strict=True)
+            except OSError:
+                self.send_json({"error": "file not found"}, 404)
+                return
+            allowed = [Path(value).expanduser().resolve() for value in self.core.settings.get("media_folders", {}).values()]
+            if not any(root == resolved or root in resolved.parents for root in allowed):
+                self.send_json({"error": "file is outside configured media folders"}, 403)
+                return
+            if not resolved.is_file():
+                self.send_json({"error": "file not found"}, 404)
+                return
+            mime_type, _ = mimetypes.guess_type(str(resolved))
+            size = resolved.stat().st_size
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", mime_type or "application/octet-stream")
+            self.send_header("Content-Length", str(size))
+            self.send_header("Accept-Ranges", "bytes")
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            with resolved.open("rb") as media_file:
+                shutil.copyfileobj(media_file, self.wfile)
+            return
+
+        super().do_GET()
+
+    def do_POST(self) -> None:
+        parsed = urlparse(self.path)
+
+        if parsed.path == "/api/library/scan":
+            Thread(target=self.core.scan_library, daemon=True).start()
+            self.send_json({"accepted": True, "status": self.core.last_scan}, 202)
+            return
+
+        if parsed.path == "/api/settings":
+            payload = self.read_json()
+            allowed = {"scan_interval_seconds", "media_folders"}
+            for key in allowed:
+                if key in payload:
+                    self.core.settings[key] = payload[key]
+
+            save_settings(self.core.paths.settings, self.core.settings)
+            self.core.events.publish("settings.updated", self.core.settings)
+            self.send_json(self.core.settings)
+            return
+
+
+        if parsed.path == "/api/folder-picker":
+            try:
+                payload = self.read_json()
+                media_type = str(payload.get("media_type", "")).strip()
+                title = str(
+                    payload.get("title", "Select WireVault Folder")
+                ).strip()
+                initial = str(payload.get("initial", "")).strip()
+
+                selected = choose_folder_native(
+                    title=title,
+                    initial=initial,
+                )
+
+                if selected:
+                    selected = str(selected).lstrip("\ufeffï»¿").strip()
+
+                if not selected:
+                    self.send_json({
+                        "cancelled": True,
+                        "path": None,
+                    })
+                    return
+
+                resolved_path = Path(selected).expanduser().resolve()
+                if not resolved_path.exists():
+                    resolved_path.mkdir(parents=True, exist_ok=True)
+
+                if not resolved_path.is_dir():
+                    self.send_json({
+                        "error": "The selected location is not a folder."
+                    }, 400)
+                    return
+
+                resolved = str(resolved_path)
+
+                if media_type:
+                    folders = self.core.settings.setdefault(
+                        "media_folders",
+                        {},
+                    )
+                    folders[media_type] = resolved
+                    save_settings(
+                        self.core.paths.settings,
+                        self.core.settings,
+                    )
+
+                response_settings = json.loads(
+                    json.dumps(self.core.settings)
+                )
+
+                # Return the selected path before publishing secondary events.
+                self.send_json({
+                    "cancelled": False,
+                    "media_type": media_type or None,
+                    "path": resolved,
+                    "settings": response_settings,
+                })
+
+                try:
+                    self.core.events.publish(
+                        "settings.updated",
+                        response_settings,
+                    )
+                except Exception:
+                    logging.exception(
+                        "Folder was saved, but settings event failed"
+                    )
+                return
+
+            except Exception as error:
+                logging.exception("Folder picker request failed")
+                try:
+                    self.send_json({
+                        "error": "Folder selection could not be saved.",
+                        "detail": str(error),
+                    }, 500)
+                except (BrokenPipeError, ConnectionResetError):
+                    pass
+                return
+
+        if parsed.path == "/api/open-folder":
+            payload = self.read_json()
+            requested = str(payload.get("path", "")).strip()
+            if not requested:
+                self.send_json({"error": "path is required"}, 400)
+                return
+            if not open_folder_native(requested):
+                self.send_json({"error": "folder could not be opened"}, 400)
+                return
+            self.send_json({"opened": True, "path": requested})
+            return
+
+        if parsed.path == "/api/notifications":
+            payload = self.read_json()
+            title = str(payload.get("title", "")).strip()
+            if not title:
+                self.send_json({"error": "title is required"}, 400)
+                return
+
+            level = str(payload.get("level", "info"))
+            detail = payload.get("detail")
+            created_at = time.time()
+            self.core.database.add_notification(level, title, detail, created_at)
+            notification = {
+                "level": level,
+                "title": title,
+                "detail": detail,
+                "created_at": created_at,
+            }
+            self.core.events.publish("notification.created", notification)
+            self.send_json(notification, 201)
+            return
+
+        self.send_json({"error": "unknown endpoint"}, 404)
+
+
+def scanner_loop(core: CoreState) -> None:
+    # Scan once when WireVault starts. Further scans are user-triggered
+    # through the Files page or API, avoiding constant disk activity.
+    core.scan_library()
+    core.stop_event.wait()
+
+
+def configure_logging(log_path: Path) -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(message)s",
+        handlers=[
+            logging.FileHandler(log_path, encoding="utf-8"),
+            logging.StreamHandler(),
+        ],
+    )
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="WireVault Core")
+    parser.add_argument("--host")
+    parser.add_argument("--port", type=int)
+    args = parser.parse_args()
+
+    project_root = Path(__file__).resolve().parents[1]
+    core = CoreState(project_root)
+    configure_logging(core.paths.logs / "wirevault-core.log")
+
+    host = args.host or core.settings.get("host", "127.0.0.1")
+    port = args.port or int(core.settings.get("port", 8080))
+
+    os.chdir(project_root)
+    server = ThreadingHTTPServer((host, port), WireVaultHandler)
+    server.core = core  # type: ignore[attr-defined]
+
+    def shutdown(*_):
+        logging.info("Stopping WireVault Core")
+        core.stop_event.set()
+        Thread(target=server.shutdown, daemon=True).start()
+
+    signal.signal(signal.SIGINT, shutdown)
+    signal.signal(signal.SIGTERM, shutdown)
+
+    Thread(target=scanner_loop, args=(core,), daemon=True).start()
+
+    logging.info("WireVault Core listening at http://%s:%s", host, port)
+    try:
+        server.serve_forever()
+    finally:
+        core.stop_event.set()
+        core.database.close()
+        server.server_close()
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

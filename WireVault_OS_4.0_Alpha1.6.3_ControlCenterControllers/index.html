@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>WireVault OS 4.0 Foundation</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css?v=1.6.0">
+  <link rel="stylesheet" href="css/layout.css?v=1.6.3">
+  <link rel="stylesheet" href="css/components.css?v=1.6.3">
+  <link rel="stylesheet" href="css/views.css?v=1.6.2">
+  <link rel="stylesheet" href="css/animations.css?v=1.6.0">
+  <link rel="stylesheet" href="css/vault-search.css?v=1.6.0">
+</head>
+<body>
+<div id="wireVaultBoot" class="wv-boot-screen" aria-label="WireVault starting">
+  <div class="wv-boot-grid" aria-hidden="true"></div>
+  <div class="wv-boot-content">
+    <div class="wv-boot-emblem" aria-hidden="true">
+      <span class="wv-boot-ring ring-one"></span>
+      <span class="wv-boot-ring ring-two"></span>
+      <span class="wv-boot-core">W</span>
+    </div>
+
+    <div class="wv-boot-wordmark">
+      <span>WIRE</span><strong>VAULT</strong>
+    </div>
+
+    <div class="wv-boot-subtitle">ENTERTAINMENT SYSTEM</div>
+
+    <div class="wv-boot-progress" aria-hidden="true">
+      <span id="wireVaultBootProgress"></span>
+    </div>
+
+    <div id="wireVaultBootStatus" class="wv-boot-status">
+      Initializing Core
+    </div>
+
+    <button id="wireVaultBootSkip" class="wv-boot-skip" type="button">
+      Press Enter or click to skip
+    </button>
+  </div>
+</div>
+  <div class="ambient-background" aria-hidden="true">
+  <div class="ambient-layer ambient-layer-base"></div>
+  <div class="ambient-layer ambient-layer-route"></div>
+  <div class="ambient-layer ambient-layer-particles"></div>
+  <div class="ambient-vignette"></div>
+</div>
+
+  <header class="topbar">
+    <section class="brand-panel">
+      <div class="brand-mark">WV</div>
+      <div>
+        <div class="brand-name">WIREVAULT <span>OS</span></div>
+        <div class="brand-subtitle">4.0 FOUNDATION</div>
+      </div>
+    </section>
+
+    <section class="clock-panel">
+      <div>
+        <div id="topClock" class="top-clock">12:00 PM</div>
+        <div id="topDate" class="top-date">Loading date…</div>
+      </div>
+      <div class="top-weather">
+        <span>⛅</span>
+        <div><strong>72°F</strong><small>Prototype Weather</small></div>
+      </div>
+    </section>
+
+    <section class="status-panel">
+      <button id="notificationCenterButton" class="icon-button notification-button focusable" type="button" aria-label="Open Notifications">
+  <span aria-hidden="true">◉</span>
+  <b id="notificationBadge" class="notification-badge hidden">0</b>
+</button>
+<button
+  id="profileButton"
+  class="profile-button focusable"
+  type="button"
+  aria-label="Switch WireVault profile"
+>
+  <span id="profileAvatar" class="profile-avatar">J</span>
+  <span class="profile-button-copy">
+    <small>PROFILE</small>
+    <strong id="profileName">Justin</strong>
+  </span>
+</button>
+      <button id="controlCenterButton" class="icon-button focusable" type="button" aria-label="Open Control Center">☰</button>
+    </section>
+  </header>
+
+  <main class="app-shell">
+    <section class="dock-shell">
+  <button id="dockScrollLeft" class="dock-scroll-button focusable" type="button" aria-label="Scroll dock left">‹</button>
+  <div class="dock-center">
+<nav id="mainDock" class="main-dock" aria-label="WireVault sections"></nav>
+  </div>
+  <button id="dockScrollRight" class="dock-scroll-button focusable" type="button" aria-label="Scroll dock right">›</button>
+</section>
+    <section id="appView" class="app-view" aria-live="polite"></section>
+  </main>
+
+  <aside id="notificationCenter" class="notification-center" aria-hidden="true">
+  <div class="notification-header">
+    <div>
+      <small>WIREVAULT OS</small>
+      <h2>NOTIFICATIONS</h2>
+    </div>
+    <button id="closeNotificationCenter" class="icon-button focusable" type="button">×</button>
+  </div>
+
+  <div class="notification-toolbar">
+    <span id="notificationSummary">No notifications</span>
+    <button id="clearNotificationView" class="secondary-button focusable" type="button">Clear View</button>
+  </div>
+
+  <div id="notificationList" class="notification-list"></div>
+</aside>
+
+<aside id="controlCenter" class="control-center" aria-hidden="true">
+    <div class="control-header">
+      <div><small>WIREVAULT OS</small><h2>CONTROL CENTER</h2></div>
+      <button id="closeControlCenter" class="icon-button focusable" type="button">×</button>
+    </div>
+    <div class="control-grid">
+      <button class="quick-toggle active focusable" type="button"><span>📶</span><strong>Wi-Fi</strong><small>On</small></button>
+      <button class="quick-toggle active focusable" type="button"><span>ᛒ</span><strong>Bluetooth</strong><small>On</small></button>
+      <button class="quick-toggle focusable" data-toggle="night" type="button"><span>🌙</span><strong>Night</strong><small>Off</small></button>
+      <button class="quick-toggle active focusable" data-toggle="sounds" type="button"><span>🔊</span><strong>Sounds</strong><small>On</small></button>
+    </div>
+<section class="control-card controller-status-card">
+  <div class="controller-status-heading">
+    <div>
+      <span>Controllers</span>
+      <strong id="controllerStatusSummary">Checking…</strong>
+    </div>
+    <span id="controllerCountBadge" class="controller-count-badge">0</span>
+  </div>
+
+  <div id="controllerDeviceList" class="controller-device-list">
+    <div class="controller-empty-state">
+      <span>🎮</span>
+      <div>
+        <strong>No controllers connected</strong>
+        <small>Connect a controller to view its status.</small>
+      </div>
+    </div>
+  </div>
+</section>
+    <div class="control-card">
+      <span>Foundation Status</span>
+      <strong id="foundationStatus">Booting modules…</strong>
+      <small id="foundationDetail">Waiting for core services</small>
+    </div>
+<section class="control-card control-system-card">
+  <div class="control-system-heading">
+    <span>Raspberry Pi System</span>
+    <strong id="controlSystemState">Waiting</strong>
+  </div>
+
+  <div class="control-system-grid">
+    <div>
+      <small>Hostname</small>
+      <strong id="controlSystemHostname">WireVault</strong>
+    </div>
+    <div>
+      <small>Temperature</small>
+      <strong id="controlSystemTemperature">—</strong>
+    </div>
+    <div>
+      <small>CPU Load</small>
+      <strong id="controlSystemLoad">—</strong>
+    </div>
+    <div>
+      <small>Memory</small>
+      <strong id="controlSystemMemory">—</strong>
+    </div>
+    <div>
+      <small>Storage</small>
+      <strong id="controlSystemStorage">—</strong>
+    </div>
+    <div>
+      <small>Uptime</small>
+      <strong id="controlSystemUptime">—</strong>
+    </div>
+  </div>
+
+  <small id="controlSystemPlatform" class="control-system-platform">
+    Start WireVault Core for live Raspberry Pi details
+  </small>
+</section>
+    <div class="control-card">
+      <span>Current Route</span>
+      <strong id="currentRouteLabel">home</strong>
+      <small>Managed by Router</small>
+    </div>
+  </aside>
+
+<div id="vaultSearchBackdrop" class="vault-search-backdrop" aria-hidden="true"></div>
+
+<section id="vaultSearch" class="vault-search" aria-hidden="true" aria-label="Vault Search">
+  <div class="vault-search-handle" aria-hidden="true"></div>
+
+  <header class="vault-search-header">
+    <div>
+      <small>WIREVAULT</small>
+      <h2>VAULT SEARCH</h2>
+    </div>
+    <div class="vault-search-shortcut">CTRL + SPACE</div>
+  </header>
+
+  <label class="vault-search-input-shell">
+    <span aria-hidden="true">⌕</span>
+    <input
+      id="vaultSearchInput"
+      type="search"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="Search pages, settings, music, games, pictures, and videos"
+      aria-label="Search WireVault"
+    >
+    <kbd>ESC</kbd>
+  </label>
+
+  <div class="vault-search-body">
+    <aside class="vault-search-sidebar">
+      <strong id="vaultSearchSectionTitle">Quick Access</strong>
+      <small id="vaultSearchSummary">Pages and recent destinations</small>
+
+      <div class="vault-search-legend">
+        <span><kbd>↑ ↓</kbd> Move</span>
+        <span><kbd>Enter</kbd> Open</span>
+        <span><kbd>Esc</kbd> Close</span>
+      </div>
+    </aside>
+
+    <div id="vaultSearchResults" class="vault-search-results" role="listbox"></div>
+  </div>
+</section>
+
+<div id="profileBackdrop" class="profile-backdrop" aria-hidden="true"></div>
+
+<aside id="profilePanel" class="profile-panel" aria-hidden="true">
+  <div class="profile-panel-header">
+    <div>
+      <small>WIREVAULT OS</small>
+      <h2>USER PROFILES</h2>
+    </div>
+    <button id="closeProfilePanel" class="icon-button focusable" type="button">×</button>
+  </div>
+
+  <div id="profileList" class="profile-list"></div>
+
+<section id="profileEditor" class="profile-editor">
+  <div class="profile-editor-heading">
+    <div><small>EDIT CURRENT PROFILE</small><strong id="profileEditorTitle">Current Profile</strong></div>
+    <span class="profile-editor-badge">PERSONALIZE</span>
+  </div>
+  <label class="profile-editor-field profile-name-field">
+    <span class="profile-editor-label">Profile name</span>
+    <input id="profileEditorName" class="focusable" type="text" maxlength="20" autocomplete="off" placeholder="Enter profile name">
+  </label>
+  <div class="profile-editor-field">
+    <span class="profile-editor-label">Choose avatar</span>
+    <div id="profileAvatarChoices" class="profile-avatar-choices"></div>
+  </div>
+  <div class="profile-editor-field">
+    <span class="profile-editor-label">Choose accent color</span>
+    <div id="profileAccentChoices" class="profile-accent-choices"></div>
+  </div>
+  <button id="saveProfileChanges" class="primary-button focusable" type="button">Save Profile Changes</button>
+</section>
+
+  <form id="createProfileForm" class="create-profile-form">
+    <label>
+      <small>NEW PROFILE</small>
+      <input
+        id="newProfileName"
+        class="focusable"
+        type="text"
+        maxlength="20"
+        placeholder="Profile name"
+        autocomplete="off"
+      >
+    </label>
+    <button class="primary-button focusable" type="submit">Add Profile</button>
+  </form>
+
+  <small class="profile-panel-note">
+    Home widget layouts are saved separately for each profile.
+  </small>
+</aside>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script type="module" src="js/app.js?v=1.6.3"></script>
+  <script type="module" src="js/animation-runtime.js"></script>
+  <script type="module" src="js/profile-manager.js?v=1.5.5"></script>
+  <script type="module" src="js/vault-search.js?v=1.2.0"></script>
+</body>
+</html>

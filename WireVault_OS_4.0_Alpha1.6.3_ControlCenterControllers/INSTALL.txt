@@ -1,0 +1,8 @@
+WireVault OS 4.0 Alpha 1.6
+
+1. Back up your existing WireVault_OS folder.
+2. Extract this complete release.
+3. Start with start_core_windows.bat on Windows or start_core_linux.sh on Linux.
+4. Close old browser tabs and open WireVault in a fresh tab.
+
+This is a complete release, not an overlay patch.

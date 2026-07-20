@@ -1,0 +1,22 @@
+{
+  "style": "WireVault Option D",
+  "layout_inspiration": "Xbox-style",
+  "illustration_style": "cartoon/rounded",
+  "lighting": "cyberpunk neon green",
+  "icons": [
+    "browser",
+    "cpu",
+    "files",
+    "games",
+    "home",
+    "music",
+    "pictures",
+    "ram",
+    "scanner",
+    "settings",
+    "storage",
+    "streaming",
+    "system",
+    "weather"
+  ]
+}

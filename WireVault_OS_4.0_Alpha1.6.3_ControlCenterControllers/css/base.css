@@ -1,0 +1,311 @@
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--wv-bg);color:var(--wv-text);font-family:Inter,Segoe UI,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+body{overflow-x:hidden}
+
+.focusable:focus-visible,.focusable.controller-focused{
+  outline:3px solid var(--wv-green);outline-offset:3px;
+  box-shadow:0 0 18px rgba(var(--wv-accent-rgb),.3)
+}
+.hidden{display:none!important}
+/* Alpha 0.5 dynamic section backgrounds */
+.ambient-background{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  overflow:hidden;
+  pointer-events:none;
+  background:#010301;
+}
+.ambient-layer,
+.ambient-vignette{
+  position:absolute;
+  inset:-6%;
+}
+.ambient-layer-base{
+  opacity:.36;
+  background:
+    linear-gradient(30deg,#113410 12%,transparent 12.5%,transparent 87%,#113410 87.5%,#113410),
+    linear-gradient(150deg,#113410 12%,transparent 12.5%,transparent 87%,#113410 87.5%,#113410),
+    linear-gradient(30deg,#113410 12%,transparent 12.5%,transparent 87%,#113410 87.5%,#113410),
+    linear-gradient(150deg,#113410 12%,transparent 12.5%,transparent 87%,#113410 87.5%,#113410),
+    linear-gradient(60deg,#0b210a 25%,transparent 25.5%,transparent 75%,#0b210a 75%,#0b210a),
+    linear-gradient(60deg,#0b210a 25%,transparent 25.5%,transparent 75%,#0b210a 75%,#0b210a);
+  background-size:72px 126px;
+  background-position:0 0,0 0,36px 63px,36px 63px,0 0,36px 63px;
+  animation:ambientHexDrift 28s linear infinite;
+}
+.ambient-layer-route{
+  opacity:.72;
+  transition:background 420ms ease,opacity 420ms ease,transform 420ms ease;
+}
+.ambient-layer-particles{
+  opacity:.34;
+  background-image:
+    radial-gradient(circle at 18% 20%,rgba(var(--wv-accent-rgb),.8) 0 1px,transparent 2px),
+    radial-gradient(circle at 72% 36%,rgba(var(--wv-accent-rgb),.6) 0 1px,transparent 2px),
+    radial-gradient(circle at 44% 76%,rgba(183,255,133,.6) 0 1px,transparent 2px),
+    radial-gradient(circle at 88% 84%,rgba(var(--wv-accent-rgb),.5) 0 1px,transparent 2px);
+  background-size:240px 240px,310px 310px,360px 360px,430px 430px;
+  animation:ambientParticles 34s linear infinite;
+}
+.ambient-vignette{
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 34%,transparent 0 34%,rgba(0,0,0,.30) 72%,rgba(0,0,0,.74) 100%),
+    linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.42));
+}
+body[data-route="home"] .ambient-layer-route{
+  background:
+    radial-gradient(circle at 16% 24%,rgba(var(--wv-accent-rgb),.18),transparent 26%),
+    radial-gradient(circle at 82% 70%,rgba(0,255,170,.10),transparent 28%);
+}
+body[data-route="streaming"] .ambient-layer-route{
+  background:
+    radial-gradient(ellipse at 50% 100%,rgba(var(--wv-accent-rgb),.16),transparent 42%),
+    linear-gradient(112deg,transparent 20%,rgba(var(--wv-accent-rgb),.07) 48%,transparent 72%);
+}
+body[data-route="games"] .ambient-layer-route{
+  background:
+    repeating-linear-gradient(90deg,transparent 0 84px,rgba(var(--wv-accent-rgb),.035) 85px 86px),
+    repeating-linear-gradient(0deg,transparent 0 84px,rgba(var(--wv-accent-rgb),.035) 85px 86px),
+    radial-gradient(circle at 80% 25%,rgba(var(--wv-accent-rgb),.19),transparent 31%);
+}
+body[data-route="music"] .ambient-layer-route{
+  background:
+    repeating-radial-gradient(ellipse at 50% 92%,rgba(var(--wv-accent-rgb),.10) 0 2px,transparent 3px 24px),
+    radial-gradient(circle at 18% 26%,rgba(0,255,170,.13),transparent 28%);
+  animation:musicPulse 5s ease-in-out infinite;
+}
+body[data-route="pictures"] .ambient-layer-route{
+  background:
+    linear-gradient(125deg,rgba(var(--wv-accent-rgb),.10),transparent 38%),
+    radial-gradient(circle at 72% 28%,rgba(183,255,133,.16),transparent 30%),
+    radial-gradient(circle at 24% 78%,rgba(0,255,170,.09),transparent 26%);
+  filter:blur(10px);
+}
+body[data-route="files"] .ambient-layer-route{
+  background:
+    linear-gradient(rgba(var(--wv-accent-rgb),.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(var(--wv-accent-rgb),.045) 1px,transparent 1px),
+    radial-gradient(circle at 80% 22%,rgba(var(--wv-accent-rgb),.16),transparent 28%);
+  background-size:32px 32px,32px 32px,auto;
+}
+body[data-route="browser"] .ambient-layer-route{
+  background:
+    radial-gradient(circle at 50% 50%,transparent 0 18%,rgba(var(--wv-accent-rgb),.05) 19% 20%,transparent 21% 34%,rgba(var(--wv-accent-rgb),.04) 35% 36%,transparent 37%),
+    radial-gradient(circle at 74% 28%,rgba(0,255,170,.12),transparent 26%);
+}
+body[data-route="settings"] .ambient-layer-route{
+  background:
+    conic-gradient(from 30deg at 80% 20%,transparent,rgba(var(--wv-accent-rgb),.09),transparent 32%),
+    radial-gradient(circle at 22% 74%,rgba(var(--wv-accent-rgb),.10),transparent 26%);
+}
+body.route-transitioning .ambient-layer-route{
+  opacity:.30;
+  transform:scale(1.04);
+}
+@keyframes ambientHexDrift{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(72px,126px,0)}
+}
+@keyframes ambientParticles{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(-140px,-90px,0)}
+}
+@keyframes musicPulse{
+  0%,100%{transform:scale(1);opacity:.62}
+  50%{transform:scale(1.025);opacity:.86}
+}
+@media(prefers-reduced-motion:reduce){
+  .ambient-layer-base,
+  .ambient-layer-particles,
+  body[data-route="music"] .ambient-layer-route{
+    animation:none!important;
+  }
+}
+
+
+/* Alpha 1.5.3 — profile-colored icons and ambient background */
+.wv-icon-inline{
+  display:inline-grid;
+  place-items:center;
+  color:var(--wv-accent,var(--wv-green));
+  line-height:0;
+}
+.wv-icon-inline>svg{
+  width:100%;
+  height:100%;
+  display:block;
+  overflow:visible;
+}
+.wv-icon-fallback{
+  color:var(--wv-accent,var(--wv-green));
+  font-size:70%;
+  line-height:1;
+}
+
+/* Rebuild the hex pattern from the active profile accent. */
+.ambient-layer-base{
+  background:
+    linear-gradient(30deg,var(--wv-accent-medium) 12%,transparent 12.5%,transparent 87%,var(--wv-accent-medium) 87.5%,var(--wv-accent-medium)),
+    linear-gradient(150deg,var(--wv-accent-medium) 12%,transparent 12.5%,transparent 87%,var(--wv-accent-medium) 87.5%,var(--wv-accent-medium)),
+    linear-gradient(30deg,var(--wv-accent-medium) 12%,transparent 12.5%,transparent 87%,var(--wv-accent-medium) 87.5%,var(--wv-accent-medium)),
+    linear-gradient(150deg,var(--wv-accent-medium) 12%,transparent 12.5%,transparent 87%,var(--wv-accent-medium) 87.5%,var(--wv-accent-medium)),
+    linear-gradient(60deg,var(--wv-accent-soft) 25%,transparent 25.5%,transparent 75%,var(--wv-accent-soft) 75%,var(--wv-accent-soft)),
+    linear-gradient(60deg,var(--wv-accent-soft) 25%,transparent 25.5%,transparent 75%,var(--wv-accent-soft) 75%,var(--wv-accent-soft)) !important;
+}
+
+/* Particles follow the profile accent. */
+.ambient-layer-particles{
+  background-image:
+    radial-gradient(circle at 18% 20%,rgba(var(--wv-accent-rgb),.80) 0 1px,transparent 2px),
+    radial-gradient(circle at 72% 36%,rgba(var(--wv-accent-rgb),.60) 0 1px,transparent 2px),
+    radial-gradient(circle at 44% 76%,rgba(var(--wv-accent-rgb),.48) 0 1px,transparent 2px),
+    radial-gradient(circle at 88% 84%,rgba(var(--wv-accent-rgb),.42) 0 1px,transparent 2px) !important;
+}
+
+/* Every route-specific background now uses the active profile color. */
+body[data-route="home"] .ambient-layer-route{
+  background:
+    radial-gradient(circle at 16% 24%,rgba(var(--wv-accent-rgb),.20),transparent 26%),
+    radial-gradient(circle at 82% 70%,rgba(var(--wv-accent-rgb),.10),transparent 28%) !important;
+}
+body[data-route="streaming"] .ambient-layer-route{
+  background:
+    radial-gradient(ellipse at 50% 100%,rgba(var(--wv-accent-rgb),.17),transparent 42%),
+    linear-gradient(112deg,transparent 20%,rgba(var(--wv-accent-rgb),.08) 48%,transparent 72%) !important;
+}
+body[data-route="games"] .ambient-layer-route{
+  background:
+    repeating-linear-gradient(90deg,transparent 0 84px,rgba(var(--wv-accent-rgb),.04) 85px 86px),
+    repeating-linear-gradient(0deg,transparent 0 84px,rgba(var(--wv-accent-rgb),.04) 85px 86px),
+    radial-gradient(circle at 80% 25%,rgba(var(--wv-accent-rgb),.20),transparent 31%) !important;
+}
+body[data-route="music"] .ambient-layer-route{
+  background:
+    repeating-radial-gradient(ellipse at 50% 92%,rgba(var(--wv-accent-rgb),.11) 0 2px,transparent 3px 24px),
+    radial-gradient(circle at 18% 26%,rgba(var(--wv-accent-rgb),.14),transparent 28%) !important;
+}
+body[data-route="pictures"] .ambient-layer-route{
+  background:
+    linear-gradient(125deg,rgba(var(--wv-accent-rgb),.11),transparent 38%),
+    radial-gradient(circle at 72% 28%,rgba(var(--wv-accent-rgb),.17),transparent 30%),
+    radial-gradient(circle at 24% 78%,rgba(var(--wv-accent-rgb),.10),transparent 26%) !important;
+}
+body[data-route="files"] .ambient-layer-route{
+  background:
+    linear-gradient(rgba(var(--wv-accent-rgb),.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(var(--wv-accent-rgb),.05) 1px,transparent 1px),
+    radial-gradient(circle at 80% 22%,rgba(var(--wv-accent-rgb),.17),transparent 28%) !important;
+  background-size:32px 32px,32px 32px,auto !important;
+}
+body[data-route="browser"] .ambient-layer-route{
+  background:
+    radial-gradient(circle at 50% 50%,transparent 0 18%,rgba(var(--wv-accent-rgb),.06) 19% 20%,transparent 21% 34%,rgba(var(--wv-accent-rgb),.05) 35% 36%,transparent 37%),
+    radial-gradient(circle at 74% 28%,rgba(var(--wv-accent-rgb),.13),transparent 26%) !important;
+}
+body[data-route="settings"] .ambient-layer-route{
+  background:
+    conic-gradient(from 30deg at 80% 20%,transparent,rgba(var(--wv-accent-rgb),.10),transparent 32%),
+    radial-gradient(circle at 22% 74%,rgba(var(--wv-accent-rgb),.11),transparent 26%) !important;
+}
+
+
+/* Alpha 1.5.4 — profile-tinted page foundation */
+html,
+body{
+  background:var(--wv-bg) !important;
+}
+
+.ambient-background{
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(var(--wv-accent-rgb),.055),
+      transparent 48%
+    ),
+    var(--wv-bg) !important;
+}
+
+.app-view{
+  background:
+    linear-gradient(
+      180deg,
+      rgba(var(--wv-accent-rgb),.015),
+      transparent 26%
+    );
+}
+
+
+/* Alpha 1.5.5 — restore high-contrast dark background */
+html,
+body{
+  background:#010201 !important;
+  color:var(--wv-text) !important;
+}
+
+.ambient-background{
+  background:#010201 !important;
+}
+
+/* Keep the original animated atmosphere, only recolor its lighting. */
+.ambient-layer-base{
+  opacity:.30 !important;
+  filter:none !important;
+}
+
+.ambient-layer-route{
+  opacity:.62 !important;
+  filter:none;
+}
+
+.ambient-vignette{
+  background:
+    radial-gradient(
+      circle at 50% 34%,
+      transparent 0 34%,
+      rgba(0,0,0,.34) 72%,
+      rgba(0,0,0,.82) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.03),
+      rgba(0,0,0,.50)
+    ) !important;
+}
+
+/* Never wash the page with a gray profile overlay. */
+.app-view{
+  background:transparent !important;
+}
+
+
+/* Alpha 1.5.6 — brighter original ambient background */
+.ambient-layer-base{
+  opacity:.42 !important;
+}
+
+.ambient-layer-route{
+  opacity:.74 !important;
+}
+
+.ambient-layer-particles{
+  opacity:.44 !important;
+}
+
+.ambient-vignette{
+  background:
+    radial-gradient(
+      circle at 50% 34%,
+      transparent 0 38%,
+      rgba(0,0,0,.22) 70%,
+      rgba(0,0,0,.66) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.01),
+      rgba(0,0,0,.30)
+    ) !important;
+}

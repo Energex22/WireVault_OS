@@ -1,19 +1,20 @@
-WireVault Alpha 1.5.5 — Dark Tinted Profile Theme
+WireVault Alpha 1.5.6 — Home Editor, Header, and Background Fix
 
-Required baseline: Alpha 1.5.4
+Required baseline: Alpha 1.5.5
 
-1. Close WireVault Core and all WireVault browser tabs.
+1. Close WireVault Core and all browser tabs.
 2. Copy all patch contents into the repository root.
 3. Replace the existing files.
 4. Restart WireVault Core.
 5. Open WireVault in a fresh browser tab.
 
-Changes:
-- Restores the original black animated background.
-- Removes the gray wash from the page.
-- Keeps cards nearly black with only a slight profile-color tint.
-- Restores white primary text and muted gray descriptions.
-- Keeps accent color limited to icons, borders, highlights, buttons, badges, meters, and active elements.
+Fixed:
+- Restores Home widget move, resize, hide, restore, and reset controls.
+- Removes the nullnull text from the Home page.
+- Brightens the original animated background.
+- Slightly lifts card brightness without adding a gray haze.
+- Adds continuous themed borders through the angled top-header seams.
+- Leaves the dock selection design unchanged.
 
 Commit message:
-Restore dark contrast with subtle profile tint
+Restore Home editor and complete header frame

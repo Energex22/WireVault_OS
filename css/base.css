@@ -280,3 +280,32 @@ body{
 .app-view{
   background:transparent !important;
 }
+
+
+/* Alpha 1.5.6 — brighter original ambient background */
+.ambient-layer-base{
+  opacity:.42 !important;
+}
+
+.ambient-layer-route{
+  opacity:.74 !important;
+}
+
+.ambient-layer-particles{
+  opacity:.44 !important;
+}
+
+.ambient-vignette{
+  background:
+    radial-gradient(
+      circle at 50% 34%,
+      transparent 0 38%,
+      rgba(0,0,0,.22) 70%,
+      rgba(0,0,0,.66) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.01),
+      rgba(0,0,0,.30)
+    ) !important;
+}

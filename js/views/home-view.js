@@ -23,7 +23,7 @@ const formatUptime = seconds => {
 
 export function createHomeView({ store, bus, coreApi, library, router }) {
   const wrapper = el('div',{
-    'data-wirevault-home-version':'1.4.0'
+    'data-wirevault-home-version':'1.5.6'
   });
 
 const layoutKey = 'wirevault.home.layout.v1';
@@ -341,6 +341,7 @@ function systemHealthCard({ system, memory, storage }) {
 
       if (!editMode) return node;
 
+      node.setAttribute('aria-disabled','true');
       node.append(el('div',{className:'widget-edit-controls'},[
         el('button',{
           type:'button',
@@ -463,12 +464,14 @@ function systemHealthCard({ system, memory, storage }) {
 
     activityPanel.append(activityList);
     wrapper.replaceChildren(
-      heading,
-      editToolbar,
-      hiddenWidgets,
-      statusStrip,
-      widgets,
-      activityPanel
+      ...[
+        heading,
+        editToolbar,
+        hiddenWidgets,
+        statusStrip,
+        widgets,
+        activityPanel
+      ].filter(Boolean)
     );
   }
 

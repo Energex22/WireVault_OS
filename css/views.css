@@ -560,3 +560,32 @@
 .badge{
   color:var(--wv-accent) !important;
 }
+
+
+/* Alpha 1.5.6 — restore and clarify Home editor controls */
+.home-edit-mode .dashboard-widget{
+  overflow:visible !important;
+  outline:1px dashed rgba(var(--wv-accent-rgb),.32);
+  outline-offset:3px;
+}
+
+.widget-edit-controls{
+  display:flex !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  z-index:40 !important;
+}
+
+.widget-edit-controls button{
+  pointer-events:auto !important;
+}
+
+.dashboard-widget.widget-editing{
+  min-height:110px;
+}
+
+.home-edit-toolbar,
+.home-hidden-widgets{
+  position:relative;
+  z-index:5;
+}

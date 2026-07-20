@@ -741,3 +741,80 @@ input[type="range"],
 .profile-button-copy small{
   color:var(--wv-muted) !important;
 }
+
+
+/* Alpha 1.5.6 — continuous header frame */
+.topbar{
+  position:fixed;
+}
+
+.topbar::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  border:1px solid var(--wv-accent);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(var(--wv-accent-rgb),.035),
+      rgba(0,0,0,.02)
+    );
+  box-shadow:
+    0 0 0 1px rgba(var(--wv-accent-rgb),.04),
+    0 0 16px rgba(var(--wv-accent-rgb),.08);
+}
+
+.topbar>section{
+  border-color:var(--wv-accent) !important;
+}
+
+/* Bridge the angled seams so the header reads as one complete frame. */
+.brand-panel::after,
+.clock-panel::before,
+.clock-panel::after,
+.status-panel::before{
+  content:"";
+  position:absolute;
+  top:-1px;
+  bottom:-1px;
+  width:44px;
+  pointer-events:none;
+  border-top:1px solid var(--wv-accent);
+  border-bottom:1px solid var(--wv-accent);
+}
+
+.brand-panel::after{
+  right:-30px;
+  transform:skewX(-34deg);
+  border-right:1px solid var(--wv-accent);
+}
+
+.clock-panel::before{
+  left:-30px;
+  transform:skewX(34deg);
+  border-left:1px solid var(--wv-accent);
+}
+
+.clock-panel::after{
+  right:-30px;
+  transform:skewX(-34deg);
+  border-right:1px solid var(--wv-accent);
+}
+
+.status-panel::before{
+  left:-30px;
+  transform:skewX(34deg);
+  border-left:1px solid var(--wv-accent);
+}
+
+@media(max-width:1000px){
+  .topbar::before,
+  .brand-panel::after,
+  .clock-panel::before,
+  .clock-panel::after,
+  .status-panel::before{
+    display:none;
+  }
+}

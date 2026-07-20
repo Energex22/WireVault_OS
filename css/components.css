@@ -529,3 +529,29 @@
       var(--wv-surface)
     ) !important;
 }
+
+
+/* Alpha 1.5.6 — slightly lifted dark cards */
+.panel,
+.dashboard-widget,
+.control-card,
+.setting-row,
+.network-placeholder,
+.backup-card,
+.file-import-row,
+.library-count-card,
+.scan-status-card>div,
+.auto-library-card,
+.picture-library-card,
+.library-manager-card,
+.empty-library-panel{
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb,var(--wv-accent) 6%,#090b09),
+      color-mix(in srgb,var(--wv-accent) 3%,#030403)
+    ) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 12px 28px rgba(0,0,0,.24) !important;
+}

@@ -237,3 +237,46 @@ body{
       transparent 26%
     );
 }
+
+
+/* Alpha 1.5.5 — restore high-contrast dark background */
+html,
+body{
+  background:#010201 !important;
+  color:var(--wv-text) !important;
+}
+
+.ambient-background{
+  background:#010201 !important;
+}
+
+/* Keep the original animated atmosphere, only recolor its lighting. */
+.ambient-layer-base{
+  opacity:.30 !important;
+  filter:none !important;
+}
+
+.ambient-layer-route{
+  opacity:.62 !important;
+  filter:none;
+}
+
+.ambient-vignette{
+  background:
+    radial-gradient(
+      circle at 50% 34%,
+      transparent 0 34%,
+      rgba(0,0,0,.34) 72%,
+      rgba(0,0,0,.82) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.03),
+      rgba(0,0,0,.50)
+    ) !important;
+}
+
+/* Never wash the page with a gray profile overlay. */
+.app-view{
+  background:transparent !important;
+}

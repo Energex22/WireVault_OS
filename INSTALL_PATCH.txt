@@ -1,14 +1,19 @@
-WireVault Alpha 1.5.4 — Complete Profile Theme
+WireVault Alpha 1.5.5 — Dark Tinted Profile Theme
 
-Required baseline: Alpha 1.5.3
+Required baseline: Alpha 1.5.4
 
-1. Close WireVault Core and every WireVault browser tab.
-2. Copy all patch contents into your repository root.
-3. Replace all existing files.
+1. Close WireVault Core and all WireVault browser tabs.
+2. Copy all patch contents into the repository root.
+3. Replace the existing files.
 4. Restart WireVault Core.
 5. Open WireVault in a fresh browser tab.
 
-This update converts the remaining fixed-green interface surfaces to the active profile theme, including selected dock tiles, bottom indicators, page borders, badges, buttons, empty-library cards, and dark panel tints.
+Changes:
+- Restores the original black animated background.
+- Removes the gray wash from the page.
+- Keeps cards nearly black with only a slight profile-color tint.
+- Restores white primary text and muted gray descriptions.
+- Keeps accent color limited to icons, borders, highlights, buttons, badges, meters, and active elements.
 
 Commit message:
-Complete profile-driven WireVault theme
+Restore dark contrast with subtle profile tint

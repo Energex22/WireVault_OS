@@ -700,3 +700,44 @@ input[type="range"],
   border-color:var(--wv-accent) !important;
   color:#041005 !important;
 }
+
+
+/* Alpha 1.5.5 — nearly black structural surfaces */
+.topbar>section,
+.control-center,
+.notification-center,
+.profile-panel,
+.vault-search,
+.mini-player,
+.dock-shell{
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(var(--wv-accent-rgb),.045),
+      transparent 50%
+    ),
+    linear-gradient(
+      180deg,
+      var(--wv-surface-2),
+      #010201
+    ) !important;
+}
+
+.topbar,
+.app-shell,
+.dock-center{
+  color:var(--wv-text) !important;
+}
+
+.top-clock,
+.brand-name,
+.profile-button-copy strong{
+  color:#f6f7f5 !important;
+}
+
+.top-date,
+.top-weather small,
+.status-item small,
+.profile-button-copy small{
+  color:var(--wv-muted) !important;
+}

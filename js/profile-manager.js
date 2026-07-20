@@ -120,22 +120,22 @@ function applyAccent(profile) {
   root.style.setProperty('--wv-accent-medium', `rgba(${accent.rgb},.28)`);
   root.style.setProperty('--wv-accent-strong', `rgba(${accent.rgb},.55)`);
   root.style.setProperty('--wv-accent-glow', `rgba(${accent.rgb},.32)`);
+  root.style.setProperty('--wv-bg', '#010201');
   root.style.setProperty(
-    '--wv-bg',
-    `color-mix(in srgb, ${accent.color} 5%, #010201)`
+    '--wv-surface',
+    `color-mix(in srgb, ${accent.color} 3%, #020302)`
   );
   root.style.setProperty(
-    '--wv-panel',
-    `color-mix(in srgb, ${accent.color} 8%, #030604)`
+    '--wv-surface-2',
+    `color-mix(in srgb, ${accent.color} 5%, #040504)`
   );
   root.style.setProperty(
-    '--wv-panel-2',
-    `color-mix(in srgb, ${accent.color} 5%, #010301)`
+    '--wv-surface-hover',
+    `color-mix(in srgb, ${accent.color} 8%, #050605)`
   );
-  root.style.setProperty(
-    '--wv-panel-hover',
-    `color-mix(in srgb, ${accent.color} 13%, #040705)`
-  );
+  root.style.setProperty('--wv-panel', 'var(--wv-surface)');
+  root.style.setProperty('--wv-panel-2', 'var(--wv-surface-2)');
+  root.style.setProperty('--wv-panel-hover', 'var(--wv-surface-hover)');
   root.style.setProperty(
     '--wv-shadow',
     `0 0 22px rgba(${accent.rgb},.18)`

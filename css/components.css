@@ -459,3 +459,73 @@
       transparent 58%
     ) !important;
 }
+
+
+/* Alpha 1.5.5 — high contrast cards */
+.panel,
+.dashboard-widget,
+.control-card,
+.setting-row,
+.network-placeholder,
+.backup-card,
+.file-import-row,
+.library-count-card,
+.scan-status-card>div,
+.auto-library-card,
+.picture-library-card,
+.library-manager-card,
+.empty-library-panel{
+  background:
+    linear-gradient(
+      180deg,
+      var(--wv-surface-2),
+      var(--wv-surface)
+    ) !important;
+  color:var(--wv-text) !important;
+}
+
+.panel::before,
+.dashboard-widget::before,
+.auto-library-card::before,
+.picture-library-card::before{
+  opacity:.10 !important;
+}
+
+.panel strong,
+.dashboard-widget strong,
+.feature-card strong,
+.empty-state strong,
+.empty-library-panel h2,
+.widget-value,
+.view-heading h1,
+.widget-panel-heading h2{
+  color:#f5f7f4 !important;
+}
+
+.panel p,
+.dashboard-widget small,
+.feature-card small,
+.empty-state,
+.empty-library-panel,
+.panel-description,
+.widget-detail{
+  color:var(--wv-muted) !important;
+}
+
+.dock-button{
+  color:#f5f7f4 !important;
+}
+
+.dock-button.active{
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(var(--wv-accent-rgb),.12),
+      transparent 48%
+    ),
+    linear-gradient(
+      180deg,
+      var(--wv-surface-hover),
+      var(--wv-surface)
+    ) !important;
+}

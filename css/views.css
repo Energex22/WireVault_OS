@@ -511,3 +511,52 @@
   filter:brightness(1.08);
   box-shadow:0 0 20px var(--wv-accent-strong) !important;
 }
+
+
+/* Alpha 1.5.5 — dark tinted page content */
+.dashboard-status-strip,
+.dashboard-activity-panel,
+.auto-library-card,
+.picture-library-card,
+.library-manager-card,
+.empty-library-panel,
+.system-status-card{
+  background:
+    linear-gradient(
+      180deg,
+      var(--wv-surface-2),
+      var(--wv-surface)
+    ) !important;
+}
+
+.view-heading h1,
+.view-heading p,
+.dashboard-widget,
+.system-status-row small,
+.system-status-note,
+.dashboard-activity-row small{
+  text-shadow:none !important;
+}
+
+.view-heading h1,
+.dashboard-widget .widget-heading strong,
+.system-status-row>strong,
+.dashboard-activity-row strong{
+  color:#f5f7f4 !important;
+}
+
+.view-heading p,
+.dashboard-widget .widget-detail,
+.system-status-row small,
+.system-status-note,
+.dashboard-activity-row small{
+  color:var(--wv-muted) !important;
+}
+
+/* Accent only where it is intentional. */
+.widget-value,
+.system-status-health,
+.library-count-badge,
+.badge{
+  color:var(--wv-accent) !important;
+}

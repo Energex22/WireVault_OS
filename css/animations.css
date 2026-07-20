@@ -606,3 +606,15 @@ body.wv-route-leaving .app-view > *,
     0 0 8px var(--wv-accent-strong),
     0 0 28px var(--wv-accent-glow) !important;
 }
+
+
+/* Alpha 1.5.5 — darker boot backdrop */
+.wv-boot-screen{
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(var(--wv-accent-rgb),.08),
+      transparent 28%
+    ),
+    linear-gradient(180deg,#010201,#000) !important;
+}

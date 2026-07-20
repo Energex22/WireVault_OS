@@ -1,27 +1,18 @@
-# WireVault Alpha 1.5.4 — Complete Profile Theme
+# WireVault Alpha 1.5.5 — Dark Tinted Profile Theme
 
-## Fixed
+## Changed
 
-- Selected dock tile border now follows the profile theme
-- Selected dock underline and glow now follow the profile theme
-- Page and empty-library card borders now follow the profile theme
-- Count badges now follow the profile theme
-- Page action buttons and hover glow now follow the profile theme
-- Cards and panels now receive a subtle dark tint from the active profile
-- Remaining fixed green glow values were replaced with profile theme variables
+- Restored the original dark animated background
+- Removed the gray page haze
+- Changed panels and cards to nearly black surfaces
+- Added only a subtle tint from the active profile
+- Restored white headings and values
+- Restored muted gray descriptions
+- Kept profile color for intentional highlights only
 
-## Theme foundation
-
-The active profile now supplies:
-
-- Page background
-- Panel background
-- Panel hover tint
-- Border strength
-- Glow strength
-- Icon color
-- Ambient background color
+The profile theme now behaves more like RGB lighting on black hardware rather
+than a color filter over the whole operating system.
 
 ## Commit
 
-`Complete profile-driven WireVault theme`
+`Restore dark contrast with subtle profile tint`

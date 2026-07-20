@@ -1,4 +1,4 @@
-import {wvIcon} from './wv-icon.js';
+import {wvIcon} from './wv-icon.js?v=1.5.3';
 const fmt=s=>{s=Number.isFinite(s)?Math.max(0,s):0;return `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`};
 export function createMiniPlayer({player,store,bus}){
   const shell=document.createElement('section');shell.id='miniMusicPlayer';shell.className='mini-player hidden';

@@ -666,3 +666,37 @@ input[type="range"],
 .profile-managed-accent-setting{
   display:none !important;
 }
+
+
+/* Alpha 1.5.3 — profile-colored structural backgrounds */
+.topbar>section,
+.control-center,
+.notification-center,
+.profile-panel,
+.vault-search,
+.mini-player,
+.dock-shell{
+  background:
+    radial-gradient(circle at 50% 0%,var(--wv-accent-soft),transparent 48%),
+    linear-gradient(180deg,rgba(8,18,10,.97),rgba(2,6,3,.99)) !important;
+}
+
+.dock-shell{
+  border-color:var(--wv-accent-medium) !important;
+}
+
+.brand-mark,
+.brand-subtitle,
+.status-item span,
+.dock-scroll-button,
+.notification-empty span,
+.control-header small,
+.notification-header small{
+  color:var(--wv-accent) !important;
+}
+
+.dock-scroll-button:hover{
+  background:var(--wv-accent) !important;
+  border-color:var(--wv-accent) !important;
+  color:#041005 !important;
+}

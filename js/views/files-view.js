@@ -1,5 +1,5 @@
 import { el } from '../components/el.js';
-import { wvIcon } from '../components/wv-icon.js';
+import { wvIcon } from '../components/wv-icon.js?v=1.5.3';
 
 const formatTime = timestamp =>
   timestamp ? new Date(timestamp * 1000).toLocaleString() : 'Never';

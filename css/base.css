@@ -125,3 +125,89 @@ body.route-transitioning .ambient-layer-route{
     animation:none!important;
   }
 }
+
+
+/* Alpha 1.5.3 — profile-colored icons and ambient background */
+.wv-icon-inline{
+  display:inline-grid;
+  place-items:center;
+  color:var(--wv-accent,var(--wv-green));
+  line-height:0;
+}
+.wv-icon-inline>svg{
+  width:100%;
+  height:100%;
+  display:block;
+  overflow:visible;
+}
+.wv-icon-fallback{
+  color:var(--wv-accent,var(--wv-green));
+  font-size:70%;
+  line-height:1;
+}
+
+/* Rebuild the hex pattern from the active profile accent. */
+.ambient-layer-base{
+  background:
+    linear-gradient(30deg,var(--wv-accent-medium) 12%,transparent 12.5%,transparent 87%,var(--wv-accent-medium) 87.5%,var(--wv-accent-medium)),
+    linear-gradient(150deg,var(--wv-accent-medium) 12%,transparent 12.5%,transparent 87%,var(--wv-accent-medium) 87.5%,var(--wv-accent-medium)),
+    linear-gradient(30deg,var(--wv-accent-medium) 12%,transparent 12.5%,transparent 87%,var(--wv-accent-medium) 87.5%,var(--wv-accent-medium)),
+    linear-gradient(150deg,var(--wv-accent-medium) 12%,transparent 12.5%,transparent 87%,var(--wv-accent-medium) 87.5%,var(--wv-accent-medium)),
+    linear-gradient(60deg,var(--wv-accent-soft) 25%,transparent 25.5%,transparent 75%,var(--wv-accent-soft) 75%,var(--wv-accent-soft)),
+    linear-gradient(60deg,var(--wv-accent-soft) 25%,transparent 25.5%,transparent 75%,var(--wv-accent-soft) 75%,var(--wv-accent-soft)) !important;
+}
+
+/* Particles follow the profile accent. */
+.ambient-layer-particles{
+  background-image:
+    radial-gradient(circle at 18% 20%,rgba(var(--wv-accent-rgb),.80) 0 1px,transparent 2px),
+    radial-gradient(circle at 72% 36%,rgba(var(--wv-accent-rgb),.60) 0 1px,transparent 2px),
+    radial-gradient(circle at 44% 76%,rgba(var(--wv-accent-rgb),.48) 0 1px,transparent 2px),
+    radial-gradient(circle at 88% 84%,rgba(var(--wv-accent-rgb),.42) 0 1px,transparent 2px) !important;
+}
+
+/* Every route-specific background now uses the active profile color. */
+body[data-route="home"] .ambient-layer-route{
+  background:
+    radial-gradient(circle at 16% 24%,rgba(var(--wv-accent-rgb),.20),transparent 26%),
+    radial-gradient(circle at 82% 70%,rgba(var(--wv-accent-rgb),.10),transparent 28%) !important;
+}
+body[data-route="streaming"] .ambient-layer-route{
+  background:
+    radial-gradient(ellipse at 50% 100%,rgba(var(--wv-accent-rgb),.17),transparent 42%),
+    linear-gradient(112deg,transparent 20%,rgba(var(--wv-accent-rgb),.08) 48%,transparent 72%) !important;
+}
+body[data-route="games"] .ambient-layer-route{
+  background:
+    repeating-linear-gradient(90deg,transparent 0 84px,rgba(var(--wv-accent-rgb),.04) 85px 86px),
+    repeating-linear-gradient(0deg,transparent 0 84px,rgba(var(--wv-accent-rgb),.04) 85px 86px),
+    radial-gradient(circle at 80% 25%,rgba(var(--wv-accent-rgb),.20),transparent 31%) !important;
+}
+body[data-route="music"] .ambient-layer-route{
+  background:
+    repeating-radial-gradient(ellipse at 50% 92%,rgba(var(--wv-accent-rgb),.11) 0 2px,transparent 3px 24px),
+    radial-gradient(circle at 18% 26%,rgba(var(--wv-accent-rgb),.14),transparent 28%) !important;
+}
+body[data-route="pictures"] .ambient-layer-route{
+  background:
+    linear-gradient(125deg,rgba(var(--wv-accent-rgb),.11),transparent 38%),
+    radial-gradient(circle at 72% 28%,rgba(var(--wv-accent-rgb),.17),transparent 30%),
+    radial-gradient(circle at 24% 78%,rgba(var(--wv-accent-rgb),.10),transparent 26%) !important;
+}
+body[data-route="files"] .ambient-layer-route{
+  background:
+    linear-gradient(rgba(var(--wv-accent-rgb),.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(var(--wv-accent-rgb),.05) 1px,transparent 1px),
+    radial-gradient(circle at 80% 22%,rgba(var(--wv-accent-rgb),.17),transparent 28%) !important;
+  background-size:32px 32px,32px 32px,auto !important;
+}
+body[data-route="browser"] .ambient-layer-route{
+  background:
+    radial-gradient(circle at 50% 50%,transparent 0 18%,rgba(var(--wv-accent-rgb),.06) 19% 20%,transparent 21% 34%,rgba(var(--wv-accent-rgb),.05) 35% 36%,transparent 37%),
+    radial-gradient(circle at 74% 28%,rgba(var(--wv-accent-rgb),.13),transparent 26%) !important;
+}
+body[data-route="settings"] .ambient-layer-route{
+  background:
+    conic-gradient(from 30deg at 80% 20%,transparent,rgba(var(--wv-accent-rgb),.10),transparent 32%),
+    radial-gradient(circle at 22% 74%,rgba(var(--wv-accent-rgb),.11),transparent 26%) !important;
+}

@@ -1,18 +1,19 @@
-WireVault Alpha 1.5.2 — Collapsed Profile Editor and Full Accent Theme
+WireVault Alpha 1.5.3 — Profile-Colored Icons and Ambient Background
 
-Required baseline: Alpha 1.5.1
+Required baseline: Alpha 1.5.2
 
-1. Close WireVault Core and every WireVault browser tab.
+1. Close WireVault Core and all WireVault browser tabs.
 2. Copy all patch contents into the repository root.
 3. Replace the existing files.
 4. Restart WireVault Core.
-5. Open WireVault in a fresh tab.
+5. Open WireVault in a fresh browser tab.
 
 Changes:
-- Profile editor remains collapsed until Edit is pressed.
-- Saving or closing the profile panel collapses the editor.
-- Profile accent colors now theme buttons, fills, glows, active states, progress bars, highlights, and panels.
-- The duplicate Accent Color setting is hidden because profiles now own it.
+- Cartoon SVG icons now inherit the active profile accent.
+- Dock and widget icons recolor with the profile.
+- Hex pattern, particles, route glow, and background effects recolor.
+- Boot logo, rings, grid, and glow recolor.
+- Structural panel lighting follows the profile accent.
 
 Commit message:
-Use profile accent as the full WireVault theme
+Theme icons and ambient background by profile

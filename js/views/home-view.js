@@ -1,5 +1,5 @@
 import { el } from '../components/el.js';
-import { wvIcon } from '../components/wv-icon.js';
+import { wvIcon } from '../components/wv-icon.js?v=1.5.3';
 
 const formatBytes = bytes => {
   if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';

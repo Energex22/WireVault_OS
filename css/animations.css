@@ -576,3 +576,33 @@ body.wv-route-leaving .app-view > *,
 .wv-route-curtain {
   display: none !important;
 }
+
+
+/* Alpha 1.5.3 — boot sequence follows profile accent */
+.wv-boot-screen{
+  background:
+    radial-gradient(circle at 50% 42%,var(--wv-accent-soft),transparent 28%),
+    linear-gradient(180deg,#020603,#000) !important;
+}
+.wv-boot-grid{
+  background:
+    linear-gradient(rgba(var(--wv-accent-rgb),.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(var(--wv-accent-rgb),.04) 1px,transparent 1px) !important;
+  background-size:42px 42px !important;
+}
+.wv-boot-ring{
+  border-color:var(--wv-accent) !important;
+  box-shadow:
+    0 0 18px var(--wv-accent-medium),
+    inset 0 0 18px var(--wv-accent-soft) !important;
+}
+.wv-boot-ring.ring-two{
+  border-color:rgba(var(--wv-accent-rgb),.58) !important;
+}
+.wv-boot-core,
+.wv-boot-wordmark strong{
+  color:var(--wv-accent) !important;
+  text-shadow:
+    0 0 8px var(--wv-accent-strong),
+    0 0 28px var(--wv-accent-glow) !important;
+}

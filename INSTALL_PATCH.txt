@@ -1,19 +1,18 @@
-WireVault Alpha 1.5 — Profile Personalization
+WireVault Alpha 1.5.2 — Collapsed Profile Editor and Full Accent Theme
 
-Required baseline: Alpha 1.4 User Profiles Foundation
+Required baseline: Alpha 1.5.1
 
-1. Close WireVault Core and all browser tabs.
+1. Close WireVault Core and every WireVault browser tab.
 2. Copy all patch contents into the repository root.
 3. Replace the existing files.
 4. Restart WireVault Core.
-5. Open WireVault in a fresh browser tab.
+5. Open WireVault in a fresh tab.
 
-Added:
-- Rename profiles.
-- Choose profile avatars.
-- Choose per-profile accent colors.
-- Accent color changes the WireVault neon highlights.
-- Profile-specific personalization is remembered locally.
+Changes:
+- Profile editor remains collapsed until Edit is pressed.
+- Saving or closing the profile panel collapses the editor.
+- Profile accent colors now theme buttons, fills, glows, active states, progress bars, highlights, and panels.
+- The duplicate Accent Color setting is hidden because profiles now own it.
 
 Commit message:
-Add profile personalization options
+Use profile accent as the full WireVault theme

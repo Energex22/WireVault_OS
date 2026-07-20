@@ -20,15 +20,28 @@ const saveChanges = document.getElementById('saveProfileChanges');
 
 const avatarOptions = ['J','A','B','C','D','G','M','P','R','S','V','★'];
 const accentOptions = [
-  { id:'green', label:'Vault Green', color:'#78ff16' },
-  { id:'blue', label:'Electric Blue', color:'#32b7ff' },
-  { id:'purple', label:'Neon Purple', color:'#b56cff' },
-  { id:'amber', label:'Amber', color:'#ffbf3f' },
-  { id:'red', label:'Crimson', color:'#ff5f57' }
+  { id:'green', label:'Vault Green', color:'#78ff16', rgb:'120,255,22' },
+  { id:'blue', label:'Electric Blue', color:'#32b7ff', rgb:'50,183,255' },
+  { id:'purple', label:'Neon Purple', color:'#b56cff', rgb:'181,108,255' },
+  { id:'amber', label:'Amber', color:'#ffbf3f', rgb:'255,191,63' },
+  { id:'red', label:'Crimson', color:'#ff5f57', rgb:'255,95,87' }
 ];
 
 let editingAvatar = 'J';
 let editingAccent = 'green';
+let editorOpen = false;
+
+function setEditorOpen(open, focusName = false) {
+  editorOpen = Boolean(open);
+  editor?.classList.toggle('open', editorOpen);
+  editor?.setAttribute('aria-hidden', String(!editorOpen));
+
+  if (editorOpen) {
+    populateEditor();
+    editor.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    if (focusName) setTimeout(() => editorName?.focus(), 220);
+  }
+}
 
 function slug(name) {
   return name
@@ -97,12 +110,18 @@ function accentDefinition(id) {
 
 function applyAccent(profile) {
   const accent = accentDefinition(profile.accent);
-  document.documentElement.style.setProperty('--wv-green', accent.color);
-  document.documentElement.style.setProperty(
-    '--wv-green-dim',
-    `${accent.color}88`
-  );
-  document.documentElement.dataset.profileAccent = accent.id;
+  const root = document.documentElement;
+
+  root.style.setProperty('--wv-green', accent.color);
+  root.style.setProperty('--wv-green-dim', `rgba(${accent.rgb},.55)`);
+  root.style.setProperty('--wv-accent', accent.color);
+  root.style.setProperty('--wv-accent-rgb', accent.rgb);
+  root.style.setProperty('--wv-accent-soft', `rgba(${accent.rgb},.12)`);
+  root.style.setProperty('--wv-accent-medium', `rgba(${accent.rgb},.28)`);
+  root.style.setProperty('--wv-accent-strong', `rgba(${accent.rgb},.55)`);
+  root.style.setProperty('--wv-accent-glow', `rgba(${accent.rgb},.32)`);
+
+  root.dataset.profileAccent = accent.id;
 }
 
 function updateTopBar() {
@@ -118,7 +137,7 @@ function openPanel() {
   panel.setAttribute('aria-hidden', 'false');
   backdrop.setAttribute('aria-hidden', 'false');
   renderProfiles();
-  populateEditor();
+  setEditorOpen(false);
 }
 
 function closePanel() {
@@ -126,6 +145,7 @@ function closePanel() {
   backdrop.classList.remove('open');
   panel.setAttribute('aria-hidden', 'true');
   backdrop.setAttribute('aria-hidden', 'true');
+  setEditorOpen(false);
 }
 
 function emitProfileChanged(profile) {
@@ -200,9 +220,7 @@ function profileCard(profile) {
     edit.className = 'profile-edit-button focusable';
     edit.textContent = 'Edit';
     edit.addEventListener('click', () => {
-      populateEditor();
-      editor.scrollIntoView({ behavior:'smooth', block:'start' });
-      setTimeout(() => editorName.focus(), 250);
+      setEditorOpen(!editorOpen, !editorOpen);
     });
     card.append(edit);
   } else {
@@ -299,6 +317,7 @@ function saveEditor() {
   renderProfiles();
   populateEditor();
   emitProfileChanged(profiles[index]);
+  setEditorOpen(false);
   window.WireVault?.toast?.('Profile saved');
 }
 
@@ -341,6 +360,41 @@ window.addEventListener('keydown', event => {
 });
 
 updateTopBar();
+
+function hideDuplicateAccentSetting(root = document) {
+  const candidates = root.querySelectorAll(
+    '.setting-row, .settings-row, .setting-card, .settings-card, label'
+  );
+
+  candidates.forEach(element => {
+    const text = element.textContent?.trim().toLowerCase() || '';
+    if (
+      text.includes('accent color') ||
+      text.includes('interface accent')
+    ) {
+      element.classList.add('profile-managed-accent-setting');
+      element.setAttribute(
+        'title',
+        'Accent color is managed by the active WireVault profile.'
+      );
+    }
+  });
+}
+
+const accentSettingObserver = new MutationObserver(records => {
+  records.forEach(record => {
+    record.addedNodes.forEach(node => {
+      if (node instanceof Element) hideDuplicateAccentSetting(node);
+    });
+  });
+});
+
+accentSettingObserver.observe(document.body, {
+  childList:true,
+  subtree:true
+});
+
+hideDuplicateAccentSetting();
 
 window.WireVaultProfiles = {
   get active() {

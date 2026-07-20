@@ -526,3 +526,143 @@ body.mini-player-visible .app-shell{padding-bottom:118px}
 .profile-edit-button{min-width:52px;height:34px;margin-right:8px;padding:0 10px;border:1px solid var(--wv-green);border-radius:9px;background:rgba(120,255,22,.10);color:var(--wv-green);font-weight:900}
 .profile-edit-button:hover{background:var(--wv-green);color:#041005}
 #createProfileForm{margin-top:18px!important}
+
+
+/* Alpha 1.5.2 — profile-managed full accent theme */
+:root{
+  --wv-accent:var(--wv-green);
+  --wv-accent-rgb:120,255,22;
+  --wv-accent-soft:rgba(120,255,22,.12);
+  --wv-accent-medium:rgba(120,255,22,.28);
+  --wv-accent-strong:rgba(120,255,22,.55);
+  --wv-accent-glow:rgba(120,255,22,.32);
+}
+
+/* Profile editor stays collapsed until Edit is pressed. */
+.profile-editor{
+  display:none !important;
+}
+.profile-editor.open{
+  display:block !important;
+  animation:wvProfileEditorOpen .22s var(--wv-ease-standard) both;
+}
+@keyframes wvProfileEditorOpen{
+  from{opacity:0;transform:translateY(-8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* The active profile owns the global accent theme. */
+.brand-name span,
+.widget-value,
+.widget-icon,
+.status-dot.online,
+.system-status-health,
+.system-status-open,
+.core-online-badge,
+.scan-idle,
+.scan-running,
+.profile-button:hover,
+.profile-avatar,
+.profile-card-avatar,
+.profile-editor-heading small,
+.profile-editor-badge,
+.profile-avatar-choice.active,
+.profile-edit-button,
+.profile-accent-choice.active,
+.vault-search-header small,
+.vault-search-result-icon,
+.vault-search-group-label,
+.mini-player-copy strong{
+  color:var(--wv-accent) !important;
+}
+
+.primary-button,
+.mini-player-play,
+.dock-button.active,
+.quick-toggle.active{
+  background:var(--wv-accent) !important;
+  border-color:var(--wv-accent) !important;
+  color:#041005 !important;
+}
+
+.secondary-button:hover,
+.icon-button:hover,
+.dock-button:hover,
+.dashboard-widget:hover,
+.dashboard-widget.controller-focused,
+.setting-row.controller-focused,
+.profile-button,
+.profile-card.active,
+.profile-editor,
+.profile-name-field input,
+.profile-avatar-choice.active,
+.profile-accent-choice.active,
+.profile-edit-button,
+.vault-search,
+.vault-search-input-shell:focus-within,
+.vault-search-result:hover,
+.vault-search-result.selected,
+.vault-search-result:focus-visible,
+.mini-player{
+  border-color:var(--wv-accent) !important;
+}
+
+.dashboard-widget:hover,
+.dashboard-widget.controller-focused,
+.profile-button:hover,
+.profile-avatar-choice.active,
+.profile-accent-choice.active,
+.vault-search-result:hover,
+.vault-search-result.selected,
+.vault-search-result:focus-visible,
+.mini-player,
+.profile-panel,
+.vault-search{
+  box-shadow:
+    0 0 0 1px var(--wv-accent-soft),
+    0 0 22px var(--wv-accent-glow) !important;
+}
+
+.system-status-meter-fill,
+.vault-search-progress span,
+.wv-boot-progress span{
+  background:linear-gradient(
+    90deg,
+    color-mix(in srgb,var(--wv-accent) 55%,#000),
+    var(--wv-accent)
+  ) !important;
+  box-shadow:0 0 9px var(--wv-accent-glow) !important;
+}
+
+.dashboard-status-strip,
+.control-card,
+.profile-card.active,
+.profile-editor,
+.vault-search-input-shell,
+.widget-edit-controls{
+  background:
+    linear-gradient(
+      180deg,
+      var(--wv-accent-soft),
+      rgba(4,12,6,.78)
+    ) !important;
+}
+
+.wv-focus-halo{
+  border-color:var(--wv-accent) !important;
+  box-shadow:
+    0 0 0 1px var(--wv-accent-soft),
+    0 0 18px var(--wv-accent-strong),
+    inset 0 0 12px var(--wv-accent-soft) !important;
+}
+
+input[type="range"],
+.mini-player-progress,
+.mini-player-volume{
+  accent-color:var(--wv-accent) !important;
+}
+
+/* Accent color is now managed by profiles, not Settings. */
+.profile-managed-accent-setting{
+  display:none !important;
+}

@@ -1,30 +1,27 @@
-# WireVault Alpha 1.5.2
+# WireVault Alpha 1.5.4 — Complete Profile Theme
 
-## Profile editor
+## Fixed
 
-The editor is collapsed by default. Press **Edit** beside the active profile to
-open it. Saving changes or closing the profile panel collapses it again.
+- Selected dock tile border now follows the profile theme
+- Selected dock underline and glow now follow the profile theme
+- Page and empty-library card borders now follow the profile theme
+- Count badges now follow the profile theme
+- Page action buttons and hover glow now follow the profile theme
+- Cards and panels now receive a subtle dark tint from the active profile
+- Remaining fixed green glow values were replaced with profile theme variables
 
-## Full profile accent
+## Theme foundation
 
-The selected profile accent now changes the complete WireVault accent system:
+The active profile now supplies:
 
-- Primary buttons
-- Active dock items
-- Borders
-- Glows
-- Focus halo
-- Progress bars
-- System meters
-- Active cards
-- Vault Search
-- Profile panel
-- Mini player
-- Range controls
-
-The separate Accent Color option in Settings is hidden because the active
-profile is now the single source of truth.
+- Page background
+- Panel background
+- Panel hover tint
+- Border strength
+- Glow strength
+- Icon color
+- Ambient background color
 
 ## Commit
 
-`Use profile accent as the full WireVault theme`
+`Complete profile-driven WireVault theme`

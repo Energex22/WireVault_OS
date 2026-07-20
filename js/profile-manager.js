@@ -120,6 +120,26 @@ function applyAccent(profile) {
   root.style.setProperty('--wv-accent-medium', `rgba(${accent.rgb},.28)`);
   root.style.setProperty('--wv-accent-strong', `rgba(${accent.rgb},.55)`);
   root.style.setProperty('--wv-accent-glow', `rgba(${accent.rgb},.32)`);
+  root.style.setProperty(
+    '--wv-bg',
+    `color-mix(in srgb, ${accent.color} 5%, #010201)`
+  );
+  root.style.setProperty(
+    '--wv-panel',
+    `color-mix(in srgb, ${accent.color} 8%, #030604)`
+  );
+  root.style.setProperty(
+    '--wv-panel-2',
+    `color-mix(in srgb, ${accent.color} 5%, #010301)`
+  );
+  root.style.setProperty(
+    '--wv-panel-hover',
+    `color-mix(in srgb, ${accent.color} 13%, #040705)`
+  );
+  root.style.setProperty(
+    '--wv-shadow',
+    `0 0 22px rgba(${accent.rgb},.18)`
+  );
 
   root.dataset.profileAccent = accent.id;
 }

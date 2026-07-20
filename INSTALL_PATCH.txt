@@ -1,19 +1,14 @@
-WireVault Alpha 1.5.3 — Profile-Colored Icons and Ambient Background
+WireVault Alpha 1.5.4 — Complete Profile Theme
 
-Required baseline: Alpha 1.5.2
+Required baseline: Alpha 1.5.3
 
-1. Close WireVault Core and all WireVault browser tabs.
-2. Copy all patch contents into the repository root.
-3. Replace the existing files.
+1. Close WireVault Core and every WireVault browser tab.
+2. Copy all patch contents into your repository root.
+3. Replace all existing files.
 4. Restart WireVault Core.
 5. Open WireVault in a fresh browser tab.
 
-Changes:
-- Cartoon SVG icons now inherit the active profile accent.
-- Dock and widget icons recolor with the profile.
-- Hex pattern, particles, route glow, and background effects recolor.
-- Boot logo, rings, grid, and glow recolor.
-- Structural panel lighting follows the profile accent.
+This update converts the remaining fixed-green interface surfaces to the active profile theme, including selected dock tiles, bottom indicators, page borders, badges, buttons, empty-library cards, and dark panel tints.
 
 Commit message:
-Theme icons and ambient background by profile
+Complete profile-driven WireVault theme

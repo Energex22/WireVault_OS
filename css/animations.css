@@ -17,7 +17,7 @@
   pointer-events: none;
   opacity: 0;
   background:
-    radial-gradient(circle at 50% 20%, rgba(120,255,22,.09), transparent 35%),
+    radial-gradient(circle at 50% 20%, rgba(var(--wv-accent-rgb),.09), transparent 35%),
     linear-gradient(180deg, rgba(1,3,1,.18), rgba(1,3,1,.72));
   backdrop-filter: blur(0);
   transition:
@@ -67,7 +67,7 @@ button:not(:disabled):active {
   transform: translateY(-5px) scale(1.012);
   box-shadow:
     0 18px 34px rgba(0,0,0,.34),
-    0 0 20px rgba(120,255,22,.16);
+    0 0 20px rgba(var(--wv-accent-rgb),.16);
 }
 
 .feature-card.controller-focused,
@@ -89,9 +89,9 @@ button:not(:disabled):active {
   border: 3px solid var(--wv-green);
   border-radius: 14px;
   box-shadow:
-    0 0 0 1px rgba(120,255,22,.18),
-    0 0 18px rgba(120,255,22,.48),
-    inset 0 0 12px rgba(120,255,22,.08);
+    0 0 0 1px rgba(var(--wv-accent-rgb),.18),
+    0 0 18px rgba(var(--wv-accent-rgb),.48),
+    inset 0 0 12px rgba(var(--wv-accent-rgb),.08);
   transition:
     left var(--wv-motion-normal) var(--wv-ease-spring),
     top var(--wv-motion-normal) var(--wv-ease-spring),
@@ -161,7 +161,7 @@ button:not(:disabled):active {
   background: linear-gradient(
     100deg,
     transparent,
-    rgba(120,255,22,.09),
+    rgba(var(--wv-accent-rgb),.09),
     transparent
   );
   animation: wvShimmer 1.4s linear infinite;
@@ -194,10 +194,10 @@ button:not(:disabled):active {
 
 @keyframes wvFocusBreathe {
   0%, 100% {
-    box-shadow: 0 0 13px rgba(120,255,22,.20);
+    box-shadow: 0 0 13px rgba(var(--wv-accent-rgb),.20);
   }
   50% {
-    box-shadow: 0 0 25px rgba(120,255,22,.42);
+    box-shadow: 0 0 25px rgba(var(--wv-accent-rgb),.42);
   }
 }
 
@@ -216,7 +216,7 @@ button:not(:disabled):active {
     opacity: 1;
     box-shadow:
       -18px 0 35px rgba(0,0,0,.68),
-      -3px 0 18px rgba(120,255,22,.12);
+      -3px 0 18px rgba(var(--wv-accent-rgb),.12);
   }
 }
 
@@ -294,7 +294,7 @@ body.wv-route-entering .app-view > * > * {
   place-items: center;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 42%, rgba(120,255,22,.11), transparent 28%),
+    radial-gradient(circle at 50% 42%, rgba(var(--wv-accent-rgb),.11), transparent 28%),
     linear-gradient(180deg, #020603, #000);
   opacity: 1;
   visibility: visible;
@@ -317,8 +317,8 @@ body.wv-route-entering .app-view > * > * {
   inset: -20%;
   opacity: .25;
   background:
-    linear-gradient(rgba(120,255,22,.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(120,255,22,.035) 1px, transparent 1px);
+    linear-gradient(rgba(var(--wv-accent-rgb),.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--wv-accent-rgb),.035) 1px, transparent 1px);
   background-size: 42px 42px;
   transform: perspective(700px) rotateX(63deg) translateY(30%);
   transform-origin: center;
@@ -348,11 +348,11 @@ body.wv-route-entering .app-view > * > * {
 .wv-boot-ring {
   position: absolute;
   inset: 0;
-  border: 3px solid rgba(120,255,22,.82);
+  border: 3px solid rgba(var(--wv-accent-rgb),.82);
   border-radius: 32px;
   box-shadow:
-    0 0 18px rgba(120,255,22,.28),
-    inset 0 0 18px rgba(120,255,22,.08);
+    0 0 18px rgba(var(--wv-accent-rgb),.28),
+    inset 0 0 18px rgba(var(--wv-accent-rgb),.08);
 }
 
 .wv-boot-ring.ring-one {
@@ -375,8 +375,8 @@ body.wv-route-entering .app-view > * > * {
   font-weight: 1000;
   line-height: 1;
   text-shadow:
-    0 0 8px rgba(120,255,22,.7),
-    0 0 28px rgba(120,255,22,.38);
+    0 0 8px rgba(var(--wv-accent-rgb),.7),
+    0 0 28px rgba(var(--wv-accent-rgb),.38);
   animation: wvBootCorePulse 1.8s ease-in-out infinite;
 }
 
@@ -395,7 +395,7 @@ body.wv-route-entering .app-view > * > * {
 .wv-boot-wordmark strong {
   color: var(--wv-green);
   font-weight: 1000;
-  text-shadow: 0 0 16px rgba(120,255,22,.4);
+  text-shadow: 0 0 16px rgba(var(--wv-accent-rgb),.4);
 }
 
 .wv-boot-subtitle {
@@ -414,7 +414,7 @@ body.wv-route-entering .app-view > * > * {
   margin-top: 34px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(120,255,22,.12);
+  background: rgba(var(--wv-accent-rgb),.12);
   box-shadow: inset 0 0 8px rgba(0,0,0,.7);
 }
 
@@ -424,7 +424,7 @@ body.wv-route-entering .app-view > * > * {
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, #3ea600, var(--wv-green), #d6ffba);
-  box-shadow: 0 0 12px rgba(120,255,22,.65);
+  box-shadow: 0 0 12px rgba(var(--wv-accent-rgb),.65);
   transition: width 420ms var(--wv-ease-standard);
 }
 
